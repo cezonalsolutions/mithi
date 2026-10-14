@@ -7,6 +7,53 @@
 <title>MITHAI Header</title>
 
 <style>
+    
+/* =====================================
+   MITHAI SEARCH — SAME SIZE + NO ZOOM
+===================================== */
+
+.mithai-search-box {
+    overflow: hidden;
+}
+
+/* Actual 16px prevents iOS focus zoom */
+.mithai-search-input {
+    font-size: 16px !important;
+
+    /* Visually appears as 14px */
+    transform: scale(0.875);
+    transform-origin: left center;
+
+    /* Compensate for scaling */
+    flex: 0 0 auto;
+    width: 114.2857%;
+    min-width: 0;
+
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+
+    -webkit-appearance: none;
+}
+
+/* Focus should not change size */
+.mithai-search-input:focus {
+    font-size: 16px !important;
+    transform: scale(0.875);
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Small screens — same visual size */
+@media (max-width: 380px) {
+    .mithai-search-input {
+        font-size: 16px !important;
+        transform: scale(0.8125);
+        width: 123.0769%;
+    }
+}
+
 :root {
   --pink: #E82B65;
   --navy: #17243B;
