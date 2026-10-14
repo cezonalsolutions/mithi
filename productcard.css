@@ -34,15 +34,15 @@
 ========================================= */
 
 .mithai-snack-item {
-  flex: 0 0 125px;
-  width: 125px;
-  min-width: 125px;
+  flex: 0 0 115px;
+  width: 115px;
+  min-width: 115px;
 
   background: transparent;
   border: none;
   box-shadow: none;
 
-  font-family: 'Fredoka', sans-serif;
+  font-family: Arial, sans-serif;
 
   scroll-snap-align: start;
 }
@@ -52,11 +52,11 @@
 ========================================= */
 
 .mithai-snack-image-box {
-  width: 125px;
-  height: 115px;
+  width: 115px;
+  height: 105px;
 
   background: #f7f8f5;
-  border-radius: 12px;
+  border-radius: 11px;
 
   display: flex;
   align-items: center;
@@ -66,12 +66,12 @@
 }
 
 /* =========================================
-   PRODUCT IMAGE
+   PRODUCT IMAGE - SMALLER
 ========================================= */
 
 .mithai-snack-image {
-  width: 85px;
-  height: 85px;
+  width: 76px;
+  height: 76px;
 
   max-width: 90%;
   max-height: 90%;
@@ -89,8 +89,8 @@
   align-items: center;
   flex-wrap: wrap;
 
-  gap: 7px;
-  margin-top: 9px;
+  gap: 6px;
+  margin-top: 8px;
 }
 
 /* =========================================
@@ -105,10 +105,10 @@
   background: #008535;
   color: #ffffff;
 
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
 
-  padding: 4px 10px;
+  padding: 4px 9px;
   border-radius: 6px;
 }
 
@@ -118,26 +118,36 @@
 
 .mithai-snack-old-price {
   color: #999999;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
 
   text-decoration: line-through;
 }
 
 /* =========================================
-   PRODUCT NAME
+   PRODUCT NAME - LIGHT & CLEAN
 ========================================= */
 
 .mithai-snack-name {
-  margin-top: 8px;
+  margin-top: 7px;
 
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.3;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
 
-  color: #17243b;
+  color: #444444;
 
-  overflow-wrap: break-word;
+  width: 100%;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 /* =========================================
@@ -147,8 +157,9 @@
 .mithai-snack-quantity {
   margin-top: 4px;
 
-  font-size: 12px;
-  font-weight: 500;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
 
   color: #777777;
 }
@@ -158,8 +169,8 @@
 ========================================= */
 
 .mithai-loading {
-  font-family: 'Fredoka', sans-serif;
-  font-size: 13px;
+  font-family: Arial, sans-serif;
+  font-size: 12px;
   color: #777777;
 }
 
@@ -170,36 +181,42 @@
 @media (max-width: 380px) {
 
   .mithai-products-grid {
-    gap: 8px;
+    gap: 7px;
     padding: 12px 15px 22px;
   }
 
   .mithai-snack-item {
-    flex: 0 0 115px;
-    width: 115px;
-    min-width: 115px;
+    flex: 0 0 108px;
+    width: 108px;
+    min-width: 108px;
   }
 
   .mithai-snack-image-box {
-    width: 115px;
-    height: 105px;
+    width: 108px;
+    height: 98px;
+    border-radius: 10px;
   }
 
   .mithai-snack-image {
-    width: 78px;
-    height: 78px;
+    width: 70px;
+    height: 70px;
   }
 
   .mithai-snack-main-price {
-    font-size: 14px;
-    padding: 4px 9px;
+    font-size: 13px;
+    padding: 4px 8px;
+  }
+
+  .mithai-snack-old-price {
+    font-size: 10px;
   }
 
   .mithai-snack-name {
-    font-size: 13px;
+    font-size: 11px;
+    font-weight: 400;
   }
 
   .mithai-snack-quantity {
-    font-size: 11px;
+    font-size: 10px;
   }
 }
