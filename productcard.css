@@ -128,16 +128,16 @@
    PRODUCT NAME - LIGHT & CLEAN
 ========================================= */
 
+/* PRODUCT NAME - MEDIUM BOLD */
 .mithai-snack-name {
   margin-top: 7px;
 
   font-family: Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
 
-  color: #444444;
-
+  color: #333333;
   width: 100%;
 
   display: -webkit-box;
@@ -149,6 +149,8 @@
   text-overflow: ellipsis;
   overflow-wrap: anywhere;
 }
+
+
 
 /* =========================================
    QUANTITY
@@ -211,10 +213,35 @@
     font-size: 10px;
   }
 
+  /* PRODUCT NAME - MEDIUM BOLD */
+.mithai-snack-name {
+  margin-top: 7px;
+
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  color: #333333;
+  width: 100%;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+}
+
+/* SMALL MOBILE */
+@media (max-width: 380px) {
   .mithai-snack-name {
-    font-size: 11px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 500;
   }
+}
 
   .mithai-snack-quantity {
     font-size: 10px;
