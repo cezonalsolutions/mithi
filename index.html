@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MITHAI Header</title>
+<title>MITHAI</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&family=Righteous&display=swap" rel="stylesheet">
 
@@ -948,12 +948,38 @@ body {
 #mithaiLoginOverlay.is-open { display: block; }
 #mithaiLoginOverlay, #mithaiLoginOverlay * { box-sizing: border-box; }
 #mithaiLoginOverlay .login-back-btn {
-  position: absolute; top: calc(35px + env(safe-area-inset-top)); left: 20px;
+  position: absolute; top: calc(38px + env(safe-area-inset-top)); left: 20px;
   width: 42px; height: 42px; display: flex; align-items: center;
   justify-content: center; background: #f5f5f5; border: 0;
   border-radius: 50%; cursor: pointer; z-index: 100;
 }
 #mithaiLoginOverlay .login-back-btn svg { width:22px; height:22px; stroke:#222; stroke-width:2.5; fill:none; }
+/* MITHAI LOGIN TOP CENTER BRAND */
+#mithaiLoginOverlay .login-brand-heading {
+  position: absolute;
+  top: calc(35px + env(safe-area-inset-top));
+  left: 74px;
+  right: 74px;
+  text-align: center;
+  z-index: 20;
+  pointer-events: none;
+}
+#mithaiLoginOverlay .login-brand-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 31px;
+  letter-spacing: -1.2px;
+  line-height: 1.05;
+  color: #ff59ae;
+}
+#mithaiLoginOverlay .login-brand-tagline {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #008535;
+  margin-top: 3px;
+  letter-spacing: .1px;
+}
 #mithaiLoginOverlay .login-image-area {
   position: absolute; top: 210px; left:0; right:0; width:100%;
   display:flex; align-items:center; justify-content:center; overflow:visible;
@@ -1212,6 +1238,7 @@ body.mithai-login-open { overflow:hidden; }
   <button type="button" class="login-back-btn" onclick="closeMithaiLogin()" aria-label="Back to home">
     <svg viewBox="0 0 24 24"><path d="M15 18L9 12L15 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </button>
+  <div class="login-brand-heading" aria-label="MITHAI Foods in Minutes"><div class="login-brand-title">MITHAI</div><div class="login-brand-tagline">Foods in Minutes</div></div>
   <div class="login-image-area"><img src="subbu.webp" class="login-center-image" alt="MITHAI"></div>
   <div class="login-bottom-box">
     <form id="loginForm">
