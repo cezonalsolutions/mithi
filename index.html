@@ -30,37 +30,28 @@ body {
   color: var(--navy);
 }
 
-/* ===========================
-   TOP HEADER
-=========================== */
+/* EXACT 30PX TOP WHITE SPACE */
+.mithai-safe-space {
+  display: block;
+  width: 100%;
+  height: 30px;
+  min-height: 30px;
+  background: #ffffff;
+  flex-shrink: 0;
+}
 
-
-/* MITHAI HEADER — 30px TOP SAFE AREA */
+/* TOP HEADER */
 .mithai-header {
   width: 100%;
   min-height: 68px;
-
-  padding: 42px 18px 12px; /* 30px extra top */
-
+  padding: 12px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   background: #ffffff;
 }
 
-/* SMALL MOBILE */
-@media (max-width: 380px) {
-  .mithai-header {
-    padding: 42px 15px 12px;
-  }
-}
-
-
-/* ===========================
-   LEFT LOCATION
-=========================== */
-
+/* LEFT LOCATION */
 .mithai-location {
   display: flex;
   align-items: center;
@@ -71,8 +62,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* GREEN CIRCLE */
-
+/* GREEN LOCATION ICON */
 .mithai-location-icon {
   width: 34px;
   height: 34px;
@@ -82,8 +72,6 @@ body {
   place-items: center;
   flex-shrink: 0;
 }
-
-/* CENTERED WHITE ARROW */
 
 .mithai-location-icon svg {
   width: 19px;
@@ -126,10 +114,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ===========================
-   RIGHT THREE-LINE MENU
-=========================== */
-
+/* RIGHT MENU */
 .mithai-menu {
   width: 34px;
   height: 34px;
@@ -153,14 +138,10 @@ body {
   display: block;
 }
 
-/* FIRST AND LAST SAME SIZE */
-
 .mithai-menu .line:first-child,
 .mithai-menu .line:last-child {
   width: 20px;
 }
-
-/* MIDDLE SMALLER */
 
 .mithai-menu .line:nth-child(2) {
   width: 12px;
@@ -170,19 +151,23 @@ body {
   transform: scale(.95);
 }
 
+@media (max-width: 380px) {
+  .mithai-header {
+    padding: 12px 15px;
+  }
+}
 </style>
 </head>
 
 <body>
 
-<!-- ===========================
-     MITHAI TOP HEADER
-=========================== -->
+<!-- EXACT 30PX TOP SPACE -->
+<div class="mithai-safe-space" aria-hidden="true"></div>
 
+<!-- MITHAI HEADER -->
 <header class="mithai-header">
 
   <!-- LEFT LOCATION -->
-
   <div class="mithai-location"
        onclick="changeLocation()"
        role="button"
@@ -190,24 +175,17 @@ body {
        onkeydown="if(event.key==='Enter')changeLocation()">
 
     <div class="mithai-location-icon">
-
       <svg viewBox="0 0 24 24"
            xmlns="http://www.w3.org/2000/svg"
            aria-hidden="true">
-
-        <path d="M20.6 3.4a1.4 1.4 0 0 0-1.5-.3L3.9 9.5a1.4 1.4 0 0 0 .2 2.7l6.2 1.6 1.6 6.2a1.4 1.4 0 0 0 2.7.2l6.4-15.2a1.4 1.4 0 0 0-.4-1.6Z"/>
-
+        <path d="M20.6 3.4a1.4 1.4 0 0 0-1.5-.3L3.9 9.5a1.4 1.4 0 0 0 .2 2.7l6.2 1.6 1.6 6.2a1.4 1.4 0 0 0 2.7l6.4-15.2a1.4 1.4 0 0 0-.4-1.6Z"/>
       </svg>
-
     </div>
 
     <div class="mithai-location-details">
 
       <div class="mithai-location-title">
-
-        <span id="locationName">
-          Select location
-        </span>
+        <span id="locationName">Select location</span>
 
         <svg class="mithai-arrow"
              width="15"
@@ -218,11 +196,8 @@ body {
              stroke-width="2.5"
              stroke-linecap="round"
              stroke-linejoin="round">
-
           <path d="m6 9 6 6 6-6"/>
-
         </svg>
-
       </div>
 
       <div class="mithai-location-address"
@@ -231,28 +206,22 @@ body {
       </div>
 
     </div>
-
   </div>
 
-  <!-- RIGHT MENU -->
-
+  <!-- RIGHT BLACK MENU -->
   <button class="mithai-menu"
           onclick="openMenu()"
           aria-label="Open menu">
-
     <span class="line"></span>
     <span class="line"></span>
     <span class="line"></span>
-
   </button>
 
 </header>
 
 <script>
-
 /* ========================================
    MITHAI LOCATION BRIDGE
-   Swift WKWebView + Reverse Geocoding
 ======================================== */
 
 const locationNameEl =
@@ -261,10 +230,8 @@ const locationNameEl =
 const locationAddressEl =
   document.getElementById("locationAddress");
 
-/* DISPLAY ADDRESS */
-
+/* DISPLAY LOCATION */
 function updateMithaiLocation(location) {
-
   if (!location) return;
 
   const address =
@@ -282,19 +249,18 @@ function updateMithaiLocation(location) {
 }
 
 /* SAVE LOCATION */
-
 function saveMithaiLocation(location) {
-
   try {
-
-    if (Number.isFinite(Number(location.latitude))) {
+    if (location.latitude != null &&
+        Number.isFinite(Number(location.latitude))) {
       localStorage.setItem(
         "mithaiUserLat",
         String(location.latitude)
       );
     }
 
-    if (Number.isFinite(Number(location.longitude))) {
+    if (location.longitude != null &&
+        Number.isFinite(Number(location.longitude))) {
       localStorage.setItem(
         "mithaiUserLon",
         String(location.longitude)
@@ -305,49 +271,37 @@ function saveMithaiLocation(location) {
       "mithaiUserAddress",
       location.address || ""
     );
-
   } catch (error) {
     console.log("Location storage unavailable");
   }
-
 }
 
-/* RECEIVE LOCATION FROM SWIFT */
-
+/* RECEIVE FROM SWIFT */
 window.onAppLocationReceived = function(location) {
-
   if (!location) return;
 
   window.APP_LOCATION = location;
-
   saveMithaiLocation(location);
-
   updateMithaiLocation(location);
 
   if (!String(location.address || "").trim()) {
     reverseGeocodeMithaiLocation(location);
   }
-
 };
 
-/* REQUEST REVERSE GEOCODING FROM SWIFT */
-
+/* OPTIONAL SWIFT REVERSE GEOCODING */
 function reverseGeocodeMithaiLocation(location) {
-
   const lat = Number(location.latitude);
   const lon = Number(location.longitude);
 
   if (!Number.isFinite(lat) ||
-      !Number.isFinite(lon)) {
-    return;
-  }
+      !Number.isFinite(lon)) return;
 
   const handler =
     window.webkit?.messageHandlers
       ?.reverseGeocodeMithaiLocation;
 
   if (handler) {
-
     locationNameEl.textContent = "Your location";
     locationAddressEl.textContent = "Finding address...";
 
@@ -355,57 +309,40 @@ function reverseGeocodeMithaiLocation(location) {
       latitude: lat,
       longitude: lon
     });
-
   } else {
-
     locationNameEl.textContent = "Your location";
     locationAddressEl.textContent =
       "Address unavailable";
-
   }
-
 }
 
-/* RECEIVE REVERSE-GEOCODED ADDRESS */
-
+/* REVERSE GEOCODING CALLBACK */
 window.onMithaiReverseGeocoded = function(data) {
-
   if (!data || !data.address) return;
 
   const current = window.APP_LOCATION;
-
   if (!current) return;
 
   if (
     Number(data.latitude) !== Number(current.latitude) ||
     Number(data.longitude) !== Number(current.longitude)
-  ) {
-    return;
-  }
+  ) return;
 
   window.onAppLocationReceived({
     latitude: current.latitude,
     longitude: current.longitude,
     address: data.address
   });
-
 };
 
-/* ========================================
-   RESTORE SAVED LOCATION
-======================================== */
-
+/* RESTORE SAVED LOCATION */
 (function restoreMithaiLocation() {
-
   if (window.APP_LOCATION) {
-
     window.onAppLocationReceived(window.APP_LOCATION);
     return;
-
   }
 
   try {
-
     const savedAddress =
       localStorage.getItem("mithaiUserAddress") || "";
 
@@ -416,7 +353,6 @@ window.onMithaiReverseGeocoded = function(data) {
       localStorage.getItem("mithaiUserLon");
 
     if (savedAddress) {
-
       const restored = {
         address: savedAddress
       };
@@ -433,45 +369,27 @@ window.onMithaiReverseGeocoded = function(data) {
 
       window.APP_LOCATION = restored;
       updateMithaiLocation(restored);
-
     }
-
   } catch (error) {}
-
 })();
 
-/* ========================================
-   CHANGE LOCATION
-======================================== */
-
+/* CHANGE LOCATION */
 function changeLocation() {
-
   const handler =
     window.webkit?.messageHandlers
       ?.changeMithaiLocation;
 
   if (handler) {
-
     handler.postMessage("open");
-
   } else {
-
     console.log("Native location picker unavailable");
-
   }
-
 }
 
-/* ========================================
-   RIGHT MENU
-======================================== */
-
+/* MENU */
 function openMenu() {
-
   console.log("Open MITHAI menu");
-
 }
-
 </script>
 
 </body>
