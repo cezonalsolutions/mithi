@@ -1456,6 +1456,10 @@ function mithaiSwitchTab(button, tab) {
    MITHAI - LOAD PRODUCT ID 1
 ===================================== */
 
+/* =====================================
+   MITHAI - LOAD PRODUCT IDS 1 & 3
+===================================== */
+
 async function loadMithaiProductOne() {
 
   const container =
@@ -1474,86 +1478,102 @@ async function loadMithaiProductOne() {
       .select(
         "id, product_name, quantity, image1, original_price, discount_price, mithai_price"
       )
-      .eq("id", 1,3)
-      .single();
+      .in("id", [1, 3])
+      .order("id", { ascending: true });
 
     if (error) throw error;
 
-    console.log("✅ MITHAI PRODUCT:", data);
+    console.log("✅ MITHAI PRODUCTS:", data);
 
-    const item = document.createElement("div");
-    item.className = "mithai-snack-item";
+    const fragment = document.createDocumentFragment();
 
-    // IMAGE BOX
-    const imageBox = document.createElement("div");
-    imageBox.className = "mithai-snack-image-box";
+    data.forEach(product => {
 
-    if (data.image1) {
-      const image = document.createElement("img");
-      image.className = "mithai-snack-image";
-      image.src = data.image1;
-      image.alt = data.product_name || "Snack";
-      image.loading = "lazy";
-      imageBox.appendChild(image);
+      const item = document.createElement("div");
+      item.className = "mithai-snack-item";
+
+      // IMAGE BOX
+      const imageBox = document.createElement("div");
+      imageBox.className = "mithai-snack-image-box";
+
+      if (product.image1) {
+        const image = document.createElement("img");
+        image.className = "mithai-snack-image";
+        image.src = product.image1;
+        image.alt = product.product_name || "Snack";
+        image.loading = "lazy";
+
+        imageBox.appendChild(image);
+      }
+
+      // PRICE ROW
+      const priceRow = document.createElement("div");
+      priceRow.className = "mithai-snack-price-row";
+
+      const sellingPrice =
+        product.mithai_price ??
+        product.discount_price ??
+        product.original_price;
+
+      const mainPrice = document.createElement("span");
+      mainPrice.className = "mithai-snack-main-price";
+      mainPrice.textContent =
+        sellingPrice != null
+          ? "₹" + sellingPrice
+          : "Price unavailable";
+
+      priceRow.appendChild(mainPrice);
+
+      // ORIGINAL PRICE
+      if (
+        product.original_price != null &&
+        sellingPrice != null &&
+        Number(product.original_price) > Number(sellingPrice)
+      ) {
+
+        const oldPrice = document.createElement("span");
+        oldPrice.className = "mithai-snack-old-price";
+        oldPrice.textContent = "₹" + product.original_price;
+
+        priceRow.appendChild(oldPrice);
+      }
+
+      // PRODUCT NAME
+      const name = document.createElement("div");
+      name.className = "mithai-snack-name";
+      name.textContent = product.product_name || "Snack";
+
+      // QUANTITY
+      const quantity = document.createElement("div");
+      quantity.className = "mithai-snack-quantity";
+      quantity.textContent = product.quantity || "";
+
+      item.append(
+        imageBox,
+        priceRow,
+        name,
+        quantity
+      );
+
+      fragment.appendChild(item);
+
+    });
+
+    if (!data.length) {
+      container.textContent = "No snacks found";
+      return;
     }
 
-    // PRICE ROW
-    const priceRow = document.createElement("div");
-    priceRow.className = "mithai-snack-price-row";
-
-    const mainPrice = document.createElement("span");
-    mainPrice.className = "mithai-snack-main-price";
-
-    const sellingPrice =
-      data.mithai_price ??
-      data.discount_price ??
-      data.original_price;
-
-    mainPrice.textContent =
-      sellingPrice != null ? "₹" + sellingPrice : "Price unavailable";
-
-    priceRow.appendChild(mainPrice);
-
-    // ORIGINAL PRICE
-    if (
-      data.original_price != null &&
-      sellingPrice != null &&
-      Number(data.original_price) > Number(sellingPrice)
-    ) {
-      const oldPrice = document.createElement("span");
-      oldPrice.className = "mithai-snack-old-price";
-      oldPrice.textContent = "₹" + data.original_price;
-      priceRow.appendChild(oldPrice);
-    }
-
-    // PRODUCT NAME
-    const name = document.createElement("div");
-    name.className = "mithai-snack-name";
-    name.textContent = data.product_name || "Snack";
-
-    // QUANTITY
-    const quantity = document.createElement("div");
-    quantity.className = "mithai-snack-quantity";
-    quantity.textContent = data.quantity || "";
-
-    item.append(
-      imageBox,
-      priceRow,
-      name,
-      quantity
-    );
-
-    container.replaceChildren(item);
+    container.replaceChildren(fragment);
 
   } catch (error) {
 
     console.error("❌ MITHAI PRODUCT ERROR:", error);
-    container.textContent = "Unable to load snack";
+    container.textContent = "Unable to load snacks";
 
   }
 }
 
-/* CALL ONLY ONCE, AFTER SUPABASE INITIALIZATION */
 loadMithaiProductOne();
 </script>
 
