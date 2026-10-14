@@ -661,6 +661,142 @@ body {
     display: none;
   }
 }
+   .snack-breaking-bar {
+  width: 100%;
+  height: 35px;
+  background: #080808;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.snack-breaking-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+
+  /* LEFT TO RIGHT */
+  animation: snackBreakingScroll 18s linear infinite;
+}
+
+.snack-breaking-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 35px;
+  padding-right: 35px;
+  white-space: nowrap;
+}
+
+.snack-breaking-text {
+  color: #ffffff;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.snack-breaking-star {
+  color: #C8E6B8;
+  font-size: 15px;
+}
+
+/* LEFT TO RIGHT MOVEMENT */
+@keyframes snackBreakingScroll {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ==============================
+   MOBILE RESPONSIVE
+============================== */
+@media(max-width:700px) {
+  .snack-banner {
+    height: 150px;
+  }
+
+  .snack-left,
+  .snack-right {
+    width: 108px;
+    height: 120px;
+  }
+
+  .snack-text-area {
+    height: 130px;
+  }
+
+  .snack-content,
+  .offer-content {
+    transform: rotate(-3deg) scale(.88);
+  }
+
+  .snack-small {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .snack-title {
+    font-size: 29px;
+    -webkit-text-stroke: 1.2px #18532b;
+    text-shadow:
+      2px 2px 0 #18532b,
+      3px 3px 0 #18532b,
+      5px 5px 0 #0b3519;
+  }
+
+  .offer-small {
+    font-size: 14px;
+  }
+
+  .offer-title {
+    font-size: 27px;
+    -webkit-text-stroke: 1.2px #18532b;
+    text-shadow:
+      2px 2px 0 #18532b,
+      3px 3px 0 #18532b,
+      5px 5px 0 #0b3519;
+  }
+
+  .snack-breaking-bar {
+    height: 30px;
+  }
+
+  .snack-breaking-text {
+    font-size: 11px;
+  }
+
+  .snack-breaking-group {
+    gap: 22px;
+    padding-right: 22px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .snack-screen-one,
+  .snack-screen-two,
+  .snack-title .letter,
+  .snack-breaking-track {
+    animation: none !important;
+  }
+
+  .snack-title .letter {
+    opacity: 1;
+    transform: none;
+  }
+
+  .snack-screen-two {
+    display: none;
+  }
+
+  .snack-breaking-track {
+    transform: none;
+  }
+}
 </style>
 
 
@@ -807,7 +943,47 @@ body {
   <img src="2.webp" class="snack-right" alt="Right snack">
 
 </div>
+<div class="snack-breaking-bar">
+  <div class="snack-breaking-track">
 
+    <!-- FIRST GROUP -->
+    <div class="snack-breaking-group">
+      <span class="snack-breaking-text">
+        GRAB YOUR FAVOURITE SNACKS!
+      </span>
+      <span class="snack-breaking-star">✦</span>
+
+      <span class="snack-breaking-text">
+        SHOP FOR ₹250 OR ABOVE & GET FREE DELIVERY
+      </span>
+      <span class="snack-breaking-star">✦</span>
+
+      <span class="snack-breaking-text">
+        FRESH SNACKS • HAPPY MOMENTS
+      </span>
+      <span class="snack-breaking-star">✦</span>
+    </div>
+
+    <!-- DUPLICATE FOR CONTINUOUS SCROLL -->
+    <div class="snack-breaking-group" aria-hidden="true">
+      <span class="snack-breaking-text">
+        GRAB YOUR FAVOURITE SNACKS!
+      </span>
+      <span class="snack-breaking-star">✦</span>
+
+      <span class="snack-breaking-text">
+        SHOP FOR ₹250 OR ABOVE & GET FREE DELIVERY
+      </span>
+      <span class="snack-breaking-star">✦</span>
+
+      <span class="snack-breaking-text">
+        FRESH SNACKS • HAPPY MOMENTS
+      </span>
+      <span class="snack-breaking-star">✦</span>
+    </div>
+
+  </div>
+</div>
 <script>
 /* ============================
    MITHAI LOCATION BRIDGE
