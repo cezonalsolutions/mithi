@@ -30,12 +30,12 @@ body {
   color: var(--navy);
 }
 
-/* EXACT 30PX TOP WHITE SPACE */
+/* EXACT 45PX TOP WHITE SPACE */
 .mithai-safe-space {
   display: block;
   width: 100%;
-  height: 30px;
-  min-height: 30px;
+  height: 45px;
+  min-height: 45px;
   background: #ffffff;
   flex-shrink: 0;
 }
@@ -161,7 +161,7 @@ body {
 
 <body>
 
-<!-- EXACT 30PX TOP SPACE -->
+<!-- EXACT 45PX TOP SPACE -->
 <div class="mithai-safe-space" aria-hidden="true"></div>
 
 <!-- MITHAI HEADER -->
@@ -178,7 +178,7 @@ body {
       <svg viewBox="0 0 24 24"
            xmlns="http://www.w3.org/2000/svg"
            aria-hidden="true">
-        <path d="M20.6 3.4a1.4 1.4 0 0 0-1.5-.3L3.9 9.5a1.4 1.4 0 0 0 .2 2.7l6.2 1.6 1.6 6.2a1.4 1.4 0 0 0 2.7l6.4-15.2a1.4 1.4 0 0 0-.4-1.6Z"/>
+        <path d="M20.6 3.4a1.4 1.4 0 0 0-1.5-.3L3.9 9.5a1.4 1.4 0 0 0 .2 2.7l6.2 1.6 1.6 6.2a1.4 1.4 0 0 0 2.7.2l6.4-15.2a1.4 1.4 0 0 0-.4-1.6Z"/>
       </svg>
     </div>
 
@@ -220,9 +220,7 @@ body {
 </header>
 
 <script>
-/* ========================================
-   MITHAI LOCATION BRIDGE
-======================================== */
+/* MITHAI LOCATION BRIDGE */
 
 const locationNameEl =
   document.getElementById("locationName");
@@ -243,7 +241,6 @@ function updateMithaiLocation(location) {
     .find(Boolean) || "Your location";
 
   locationNameEl.textContent = name;
-
   locationAddressEl.textContent =
     address || "Delivery location selected";
 }
@@ -276,7 +273,7 @@ function saveMithaiLocation(location) {
   }
 }
 
-/* RECEIVE FROM SWIFT */
+/* RECEIVE LOCATION FROM SWIFT */
 window.onAppLocationReceived = function(location) {
   if (!location) return;
 
@@ -289,7 +286,7 @@ window.onAppLocationReceived = function(location) {
   }
 };
 
-/* OPTIONAL SWIFT REVERSE GEOCODING */
+/* OPTIONAL REVERSE GEOCODING */
 function reverseGeocodeMithaiLocation(location) {
   const lat = Number(location.latitude);
   const lon = Number(location.longitude);
