@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MITHAI Header</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
 
 <style>
    
@@ -420,6 +421,246 @@ body {
     font-size: 10px;
   }
 }
+
+.snack-banner {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  background: #C8E6B8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* LEFT & RIGHT IMAGES */
+.snack-left,
+.snack-right {
+  position: absolute;
+  bottom: 0;
+  width: 160px;
+  height: 165px;
+  object-fit: contain;
+  z-index: 3;
+}
+
+.snack-left {
+  left: 0;
+  object-position: bottom left;
+}
+
+.snack-right {
+  right: 0;
+  object-position: bottom right;
+}
+
+/* TEXT AREA */
+.snack-text-area {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* BOTH SCREENS */
+.snack-screen {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+}
+
+/* FIRST SCREEN */
+.snack-screen-one {
+  animation: firstSlide 9s infinite;
+}
+
+/* BEND / TILT */
+.snack-content {
+  transform: rotate(-3deg);
+}
+
+.snack-small {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 4px;
+  color: #27663c;
+  margin-bottom: 3px;
+}
+
+/* 3D TITLE */
+.snack-title {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: clamp(32px, 5vw, 62px);
+  line-height: 1.05;
+  letter-spacing: 2px;
+  color: #f8ff8c;
+  -webkit-text-stroke: 2px #18532b;
+
+  text-shadow:
+    2px 2px 0 #18532b,
+    4px 4px 0 #18532b,
+    6px 6px 0 #18532b,
+    8px 8px 0 #0b3519,
+    10px 12px 12px rgba(0,0,0,.2);
+}
+
+.snack-title .line {
+  display: block;
+  white-space: nowrap;
+}
+
+/* LETTER ZOOM */
+.snack-title .letter {
+  display: inline-block;
+  opacity: 0;
+  transform: scale(0);
+  animation: letterZoom 9s infinite;
+}
+
+/* SECOND SCREEN */
+.snack-screen-two {
+  opacity: 0;
+  transform: translateY(100px);
+  animation: secondSlide 9s infinite;
+}
+
+.offer-content {
+  transform: rotate(-3deg);
+}
+
+.offer-small {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #27663c;
+}
+
+.offer-title {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: clamp(28px, 4.5vw, 52px);
+  line-height: 1.15;
+  color: #f8ff8c;
+  -webkit-text-stroke: 2px #18532b;
+
+  text-shadow:
+    2px 2px 0 #18532b,
+    4px 4px 0 #18532b,
+    6px 6px 0 #0b3519,
+    8px 9px 10px rgba(0,0,0,.18);
+}
+
+/* LETTER ZOOM */
+@keyframes letterZoom {
+  0%, 2% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  5%, 48% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  55%, 100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* FIRST SCREEN SLIDE UP */
+@keyframes firstSlide {
+  0%, 48% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  58%, 100% {
+    opacity: 0;
+    transform: translateY(-120px);
+  }
+}
+
+/* SECOND SCREEN */
+@keyframes secondSlide {
+  0%, 50% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  62%, 90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px);
+  }
+}
+
+/* MOBILE */
+@media(max-width:700px) {
+  .snack-banner {
+    height: 150px;
+  }
+
+  .snack-left,
+  .snack-right {
+    width: 108px;
+    height: 120px;
+  }
+
+  .snack-text-area {
+    height: 130px;
+  }
+
+  .snack-content,
+  .offer-content {
+    transform: rotate(-3deg) scale(.88);
+  }
+
+  .snack-small {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  .snack-title {
+    font-size: 29px;
+    -webkit-text-stroke: 1.2px #18532b;
+    text-shadow:
+      2px 2px 0 #18532b,
+      3px 3px 0 #18532b,
+      5px 5px 0 #0b3519;
+  }
+
+  .offer-small {
+    font-size: 14px;
+  }
+
+  .offer-title {
+    font-size: 27px;
+    -webkit-text-stroke: 1.2px #18532b;
+    text-shadow:
+      2px 2px 0 #18532b,
+      3px 3px 0 #18532b,
+      5px 5px 0 #0b3519;
+  }
+}
+
+@media(prefers-reduced-motion:reduce) {
+  .snack-screen-one,
+  .snack-screen-two,
+  .snack-title .letter {
+    animation: none !important;
+  }
+  .snack-title .letter {
+    opacity: 1;
+    transform: none;
+  }
+  .snack-screen-two {
+    display: none;
+  }
+}
 </style>
 
 
@@ -536,6 +777,36 @@ body {
   ORDER NOW
 </button>
 </section>
+<div class="snack-banner">
+
+  <img src="1.webp" class="snack-left" alt="Left snack">
+
+  <div class="snack-text-area">
+
+    <!-- FIRST SCREEN -->
+    <div class="snack-screen snack-screen-one">
+      <div class="snack-content">
+        <div class="snack-small">GRAB YOUR</div>
+        <div class="snack-title" id="animatedSnackTitle">
+          <span class="line">FAVOURITE</span>
+          <span class="line">SNACKS!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECOND SCREEN -->
+    <div class="snack-screen snack-screen-two">
+      <div class="offer-content">
+        <div class="offer-small">SHOP FOR ₹250 OR ABOVE</div>
+        <div class="offer-title">GET FREE DELIVERY!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <img src="2.webp" class="snack-right" alt="Right snack">
+
+</div>
 
 <script>
 /* ============================
@@ -749,6 +1020,31 @@ mithaiSearchInput.addEventListener("keydown", function(event) {
     mithaiSearchInput.blur();
   }
 });
+
+(function() {
+  const lines = document.querySelectorAll(
+    "#animatedSnackTitle .line"
+  );
+
+  let letterIndex = 0;
+
+  lines.forEach(line => {
+    const text = line.textContent;
+    line.textContent = "";
+
+    [...text].forEach(char => {
+      const span = document.createElement("span");
+      span.className = "letter";
+      span.textContent = char === " " ? "\u00A0" : char;
+
+      span.style.animationDelay =
+        (letterIndex * 0.12) + "s";
+
+      line.appendChild(span);
+      letterIndex++;
+    });
+  });
+})();
 </script>
 
 </body>
