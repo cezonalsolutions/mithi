@@ -797,6 +797,58 @@ body {
     transform: none;
   }
 }
+
+/* MITHAI BOTTOM NAVIGATION */
+
+body {
+  padding-bottom: calc(72px + env(safe-area-inset-bottom));
+}
+
+.mithai-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc(66px + env(safe-area-inset-bottom));
+  padding: 5px 10px calc(5px + env(safe-area-inset-bottom));
+  background: #ffffff;
+  border-top: 1px solid #eeeeee;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  z-index: 99999;
+}
+
+.mithai-nav-item {
+  flex: 1;
+  height: 56px;
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: #777777;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mithai-nav-item img {
+  width: 27px;
+  height: 27px;
+  object-fit: contain;
+}
+
+.mithai-nav-item span {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mithai-nav-item.active {
+  color: #008535;
+}
+
 </style>
 
 
@@ -984,6 +1036,34 @@ body {
 
   </div>
 </div>
+
+
+
+
+<!-- MITHAI BOTTOM NAV -->
+
+<nav class="mithai-bottom-nav">
+
+  <button class="mithai-nav-item active"
+          onclick="mithaiSwitchTab(this, 'home')">
+    <img src="home.png" alt="">
+    <span>Home</span>
+  </button>
+
+  <button class="mithai-nav-item"
+          onclick="mithaiSwitchTab(this, 'explore')">
+    <img src="exp.png" alt="">
+    <span>Explore</span>
+  </button>
+
+  <button class="mithai-nav-item"
+          onclick="mithaiSwitchTab(this, 'ratings')">
+    <img src="rating.png" alt="">
+    <span>Ratings</span>
+  </button>
+
+</nav>
+
 <script>
 /* ============================
    MITHAI LOCATION BRIDGE
@@ -1221,6 +1301,21 @@ mithaiSearchInput.addEventListener("keydown", function(event) {
     });
   });
 })();
+
+function mithaiSwitchTab(button, tab) {
+
+  document.querySelectorAll(".mithai-nav-item")
+    .forEach(item => item.classList.remove("active"));
+
+  button.classList.add("active");
+
+  window.dispatchEvent(
+    new CustomEvent("mithaiTabChange", {
+      detail: { tab: tab }
+    })
+  );
+}
+
 </script>
 
 </body>
