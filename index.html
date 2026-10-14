@@ -849,6 +849,57 @@ body {
   color: #008535;
 }
 
+/* =====================================
+   MITHAI LAST NAV - CUSTOM IMAGE
+===================================== */
+
+/* =====================================
+   MITHAI LAST NAV - CUSTOM IMAGE
+===================================== */
+
+.mithai-special-nav {
+    position: relative;
+    overflow: visible !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* LAST IMAGE */
+.mithai-special-nav img {
+    width: 60px !important;
+    height: 60px !important;
+
+    max-width: none !important;
+    object-fit: contain !important;
+
+    /* LITTLE UP */
+    transform: translateY(-3px) !important;
+
+    transition: transform 0.2s ease;
+}
+
+/* CLICK EFFECT */
+.mithai-special-nav:active img {
+    transform: translateY(-3px) scale(0.95) !important;
+}
+
+/* MOBILE */
+@media (max-width: 380px) {
+    .mithai-special-nav img {
+        width: 55px !important;
+        height: 55px !important;
+    }
+}
+
+
 </style>
 
 
@@ -1061,6 +1112,12 @@ body {
     <img src="rating.png" alt="">
     <span>Ratings</span>
   </button>
+
+<!-- LAST BIG IMAGE NAV -->
+<button class="mithai-nav-item mithai-special-nav"
+        onclick="mithaiSwitchTab(this, 'custom')">
+  <img src="promo.webp" alt="Special">
+</button>
 
 </nav>
 
