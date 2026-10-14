@@ -1,0 +1,157 @@
+/* =========================================
+   MITHAI SNACK PRODUCT GRID
+========================================= */
+
+.mithai-products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 14px 20px 25px;
+}
+
+/* NO OUTER CARD BOX */
+.mithai-snack-item {
+  width: 100%;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-family: 'Fredoka', sans-serif;
+}
+
+/* =========================================
+   SMALL IMAGE BOX
+========================================= */
+
+.mithai-snack-image-box {
+  width: 125px;
+  max-width: 100%;
+  height: 115px;
+
+  background: #f7f8f5;
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+/* PRODUCT IMAGE */
+.mithai-snack-image {
+  width: 85px;
+  height: 85px;
+  max-width: 90%;
+  max-height: 90%;
+
+  object-fit: contain;
+  display: block;
+}
+
+/* =========================================
+   PRICE ROW
+========================================= */
+
+.mithai-snack-price-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 9px;
+}
+
+/* GREEN MAIN PRICE BOX */
+.mithai-snack-main-price {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #008535;
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* ORIGINAL PRICE */
+.mithai-snack-old-price {
+  color: #999999;
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: line-through;
+}
+
+/* =========================================
+   PRODUCT NAME
+========================================= */
+
+.mithai-snack-name {
+  margin-top: 8px;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  color: #17243b;
+
+  overflow-wrap: break-word;
+}
+
+/* =========================================
+   QUANTITY
+========================================= */
+
+.mithai-snack-quantity {
+  margin-top: 4px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  color: #777777;
+}
+
+/* LOADING */
+.mithai-loading {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  color: #777777;
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+
+  .mithai-products-grid {
+    gap: 10px;
+    padding: 12px 15px 22px;
+  }
+
+  .mithai-snack-image-box {
+    width: 115px;
+    height: 105px;
+  }
+
+  .mithai-snack-image {
+    width: 78px;
+    height: 78px;
+  }
+
+  .mithai-snack-main-price {
+    font-size: 14px;
+    padding: 4px 9px;
+  }
+
+  .mithai-snack-name {
+    font-size: 13px;
+  }
+
+  .mithai-snack-quantity {
+    font-size: 11px;
+  }
+}
