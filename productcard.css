@@ -261,3 +261,62 @@
     height: 105px;
   }
 }
+/* IMAGE CONTAINER */
+.mithai-snack-image-box {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* ADD BUTTON POSITION */
+.mithai-image-add {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  z-index: 10;
+}
+
+/* ONLY ADD BUTTON */
+.mithai-image-add .mithai-add-btn {
+  width: 62px;
+  height: 29px;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  border: 1.5px solid #E82B65;
+  border-radius: 7px;
+  color: #E82B65;
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* QUANTITY CONTROL */
+.mithai-image-add .mithai-qty-control {
+  width: 85px;
+  height: 29px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #E82B65;
+  border-radius: 7px;
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.mithai-image-add .mithai-qty-control button {
+  width: 28px;
+  height: 29px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.mithai-image-add .mithai-qty-control span {
+  font-size: 12px;
+  font-weight: 700;
+}
