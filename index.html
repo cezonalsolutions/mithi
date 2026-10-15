@@ -1034,73 +1034,42 @@ body.mithai-has-cart { padding-bottom: calc(235px + env(safe-area-inset-bottom))
 nene antunid 
 /* FREE DELIVERY + CART SIDE BY SIDE */
 
-
-/* =========================================
-   MITHAI — RESPONSIVE DELIVERY + CART
-========================================= */
-
-/* NO CART — FULL WIDTH DELIVERY */
 .deliveryFloatBar {
   left: 12px !important;
   right: 12px !important;
-  width: auto !important;
   bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+  width: auto;
   transition: width 0.25s ease;
 }
 
-/* CART AVAILABLE — RESPONSIVE LAYOUT */
-body.mithai-has-cart {
-  --cart-width: clamp(95px, 27vw, 122px);
-  --bar-gap: 10px;
-}
 
-/* GREEN DELIVERY — REMAINING SPACE */
+/* GREEN DELIVERY BAR — EXTEND TO CART */
 body.mithai-has-cart .deliveryFloatBar {
   left: 12px !important;
-  right: calc(
-    12px + var(--cart-width) + var(--bar-gap)
-  ) !important;
+  right: calc(12px + (100% - 36px) * 0.19 + 10px) !important;
   width: auto !important;
   bottom: calc(84px + env(safe-area-inset-bottom)) !important;
 }
 
-/* PINK CART — RESPONSIVE WIDTH */
+/* PINK CART — SAME SIZE */
 body.mithai-has-cart .cartFloatBox {
   left: auto !important;
   right: 12px !important;
-  width: var(--cart-width) !important;
+  width: calc((100% - 36px) * 0.19) !important;
   bottom: calc(84px + env(safe-area-inset-bottom)) !important;
-  box-sizing: border-box;
 }
 
-/* SAME HEIGHT AND ROUNDED CORNERS */
+
+
+/* KEEP EXISTING COLORS */
 .deliveryFloatBar,
 .cartFloatBox {
   min-height: 65px;
   border-radius: 16px;
 }
 
-/* CART COUNT SINGLE LINE */
-body.mithai-has-cart .cartFloatCount {
-  white-space: nowrap !important;
-  overflow-wrap: normal !important;
-  word-break: normal !important;
-}
-
-/* CART TEXT SINGLE LINE */
-body.mithai-has-cart .cartFloatText {
-  min-width: 0;
-  white-space: nowrap !important;
-  flex-shrink: 0 !important;
-}
-
-body.mithai-has-cart .cartFloatTitle {
-  white-space: nowrap !important;
-}
-
-/* MOBILE */
+/* SMALL MOBILE SCREEN */
 @media (max-width: 480px) {
-
   body.mithai-has-cart .deliveryFloatBar {
     padding: 9px 8px;
     gap: 5px;
@@ -1135,37 +1104,31 @@ body.mithai-has-cart .cartFloatTitle {
 
   body.mithai-has-cart .cartFloatCount {
     font-size: 10px;
-    white-space: nowrap !important;
   }
 }
 
-/* EXTRA SMALL MOBILE */
-@media (max-width: 350px) {
-
-  body.mithai-has-cart {
-    --cart-width: 95px;
-  }
-
-  body.mithai-has-cart .deliveryIcon {
-    margin-right: 4px;
-  }
-
-  body.mithai-has-cart .deliveryTitle {
-    font-size: 10px;
-  }
-
-  body.mithai-has-cart .deliverySub {
-    font-size: 8px;
-  }
+/* CART ITEMS — SINGLE LINE, SAME SIZE */
+body.mithai-has-cart .cartFloatCount {
+  white-space: nowrap !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
 }
 
-/* NO EXTRA BOTTOM SPACE */
+/* PREVENT TEXT WRAPPING */
+body.mithai-has-cart .cartFloatText {
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* KEEP CART TITLE SINGLE LINE */
+body.mithai-has-cart .cartFloatTitle {
+  white-space: nowrap !important;
+}
+
+/* NO EXTRA SPACE */
 body.mithai-has-cart {
-  padding-bottom: calc(
-    155px + env(safe-area-inset-bottom)
-  ) !important;
+  padding-bottom: calc(155px + env(safe-area-inset-bottom)) !important;
 }
-
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
