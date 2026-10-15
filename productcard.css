@@ -495,3 +495,96 @@
     transition: none !important;
   }
 }
+
+/* SMALL CENTER IMAGE */
+
+.mithai-center-banner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.mithai-center-image {
+  display: block;
+  width: 120px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .mithai-center-image {
+    width: 100px;
+  }
+}
+
+/* =====================================
+   MITHAI FSSAI LOGO + LICENSE NUMBER
+===================================== */
+
+/* FSSAI CONTAINER */
+.mithai-fssai {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 5px 10px 15px;
+  box-sizing: border-box;
+}
+
+/* FSSAI IMAGE */
+.mithai-fssai-logo {
+  width: 45px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* LICENSE NUMBER */
+.mithai-fssai-number {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #333333;
+  white-space: nowrap;
+
+  /* TEXT LITTLE DOWN */
+  position: relative;
+  top: 4px;
+}
+
+/* MOBILE */
+@media (max-width: 480px) {
+  .mithai-fssai-logo {
+    width: 38px;
+  }
+
+  .mithai-fssai-number {
+    font-size: 10px;
+    top: 4px;
+  }
+}
+
+/* FULL WIDTH LAST IMAGE */
+
+.mithai-last-banner {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.mithai-last-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
