@@ -982,17 +982,14 @@ body {
   text-overflow: clip;
 }
 .deliveryText { overflow: hidden; }
-/* Auto-fit delivery text instead of scrolling or clipping */
-.deliveryText .deliveryTitle,
-.deliveryText .deliverySub {
-  display: block;
-  width: 100%;
-  max-width: 100%;
-  white-space: nowrap;
-  overflow: visible;
-  animation: none !important;
-  transform: none !important;
-  letter-spacing: 0;
+.deliverySub.is-marquee {
+  display: inline-block;
+  max-width: none;
+  animation: deliverySubMarquee 7s ease-in-out infinite alternate;
+}
+@keyframes deliverySubMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-1 * (100% - 100px))); }
 }
 .pinkCartBar {
   width: 115px; flex: 0 0 115px; min-height: 65px;
@@ -1855,7 +1852,10 @@ function saveMithaiLocation(location) {
 
 /* RECEIVE LOCATION FROM SWIFT */
 window.onAppLocationReceived = function(location) {
-  if (!location) return;
+  if (typeof location === "string") {
+    try { location = JSON.parse(location); } catch (_) { return; }
+  }
+  if (!location || typeof location !== "object") return;
 
   window.APP_LOCATION = location;
   saveMithaiLocation(location);
@@ -1952,15 +1952,25 @@ window.onMithaiReverseGeocoded = function(data) {
 
 /* CHANGE LOCATION */
 function changeLocation() {
-  const handler =
-    window.webkit?.messageHandlers
-      ?.changeMithaiLocation;
-
-  if (handler) {
-    handler.postMessage("open");
-  } else {
-    console.log("Native location picker unavailable");
+  // iOS WKWebView location picker
+  const ios = window.webkit?.messageHandlers?.changeMithaiLocation;
+  if (ios && typeof ios.postMessage === "function") {
+    ios.postMessage("open");
+    return;
   }
+  // Android WebView JavascriptInterface: support common bridge names.
+  for (const name of ["Android", "MithaiAndroid", "AndroidBridge"]) {
+    const bridge = window[name];
+    if (!bridge) continue;
+    for (const method of ["changeMithaiLocation", "openLocationPicker", "requestLocation"]) {
+      if (typeof bridge[method] === "function") {
+        bridge[method]();
+        return;
+      }
+    }
+  }
+  // Browser fallback: location selection remains available through native apps.
+  console.log("Native location picker unavailable");
 }
 
 /* MENU */
@@ -2314,36 +2324,13 @@ function updateFreeDeliveryProgress(cartTotal) {
     if (total >= FREE_DELIVERY_TARGET) {
       title.textContent = 'Free Delivery Unlocked';
       sub.textContent = 'Your order is eligible for free delivery';
-
+      sub.classList.add('is-marquee');
     } else {
       title.textContent = 'Popular around your area';
       sub.textContent = `Shop for ₹${pending} to unlock free delivery`;
-
+      sub.classList.remove('is-marquee');
     }
   }
-  fitMithaiDeliveryText();
-}
-/* Shrink only when needed so the entire sentence stays visible. */
-function fitMithaiDeliveryText() {
-  const parent = document.querySelector('#mithaiFreeDeliveryBar .deliveryText');
-  if (!parent) return;
-  const available = parent.clientWidth;
-  if (!available) return;
-  for (const [selector, maxSize] of [['.deliveryTitle', 13], ['.deliverySub', 11]]) {
-    const el = parent.querySelector(selector);
-    if (!el) continue;
-    let size = maxSize;
-    el.style.fontSize = size + 'px';
-    while (el.scrollWidth > available && size > 5) {
-      size -= 0.25;
-      el.style.fontSize = size + 'px';
-    }
-  }
-}
-window.addEventListener('resize', fitMithaiDeliveryText);
-if (typeof ResizeObserver !== 'undefined') {
-  const deliveryTextElement = document.querySelector('#mithaiFreeDeliveryBar .deliveryText');
-  if (deliveryTextElement) new ResizeObserver(fitMithaiDeliveryText).observe(deliveryTextElement);
 }
 updateFreeDeliveryProgress(0);
 function updatePinkCartCount(count) {
@@ -2389,6 +2376,47 @@ function openMithaiCart() {
 }
 // The existing product Add / +/- controls update the count and product image.
 
+</script>
+
+
+<script>
+/* MITHAI HAPTICS — native iOS/Android, browser fallback.
+   Native handlers must be registered by the app for reliable iOS feedback. */
+(function () {
+  "use strict";
+  function mithaiHaptic() {
+    try {
+      const ios = window.webkit?.messageHandlers?.haptic;
+      if (ios && typeof ios.postMessage === "function") {
+        ios.postMessage("light");
+        return;
+      }
+    } catch (_) {}
+    try {
+      for (const name of ["Android", "MithaiAndroid", "AndroidBridge"]) {
+        const bridge = window[name];
+        if (!bridge) continue;
+        if (typeof bridge.haptic === "function") { bridge.haptic("light"); return; }
+        if (typeof bridge.vibrate === "function") { bridge.vibrate(12); return; }
+      }
+    } catch (_) {}
+    try { if (navigator.vibrate) navigator.vibrate(12); } catch (_) {}
+  }
+  // One subtle haptic per touch; handles dynamically created product controls.
+  document.addEventListener("pointerdown", function (event) {
+    if (event.pointerType === "mouse" || event.isPrimary === false) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    mithaiHaptic();
+  }, { passive: true, capture: true });
+  // Keyboard-accessible activations, without double-firing touch feedback.
+  document.addEventListener("keydown", function (event) {
+    if (event.repeat || (event.key !== "Enter" && event.key !== " ")) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest('button, a, [role="button"], [role="tab"]')) mithaiHaptic();
+  }, { passive: true, capture: true });
+  window.mithaiHaptic = mithaiHaptic;
+})();
 </script>
 
 </body>
