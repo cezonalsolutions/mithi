@@ -2402,18 +2402,21 @@ function openMithaiCart() {
     } catch (_) {}
     try { if (navigator.vibrate) navigator.vibrate(12); } catch (_) {}
   }
-  // One subtle haptic per touch; handles dynamically created product controls.
+  // Haptic ONLY for product ADD and quantity +/- buttons.
+  // Event delegation supports dynamically rendered product cards.
+  function isProductQuantityButton(target) {
+    return target instanceof Element && Boolean(target.closest(
+      '.mithai-add-btn, .mithai-qty-control button'
+    ));
+  }
   document.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" || event.isPrimary === false) return;
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    mithaiHaptic();
+    if (isProductQuantityButton(event.target)) mithaiHaptic();
   }, { passive: true, capture: true });
-  // Keyboard-accessible activations, without double-firing touch feedback.
+  // Accessibility: keyboard activation also receives feedback.
   document.addEventListener("keydown", function (event) {
     if (event.repeat || (event.key !== "Enter" && event.key !== " ")) return;
-    const target = event.target;
-    if (target instanceof Element && target.closest('button, a, [role="button"], [role="tab"]')) mithaiHaptic();
+    if (isProductQuantityButton(event.target)) mithaiHaptic();
   }, { passive: true, capture: true });
   window.mithaiHaptic = mithaiHaptic;
 })();
