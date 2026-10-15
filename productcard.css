@@ -14,14 +14,14 @@
   overflow-x: auto;
   overflow-y: hidden;
 
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   -webkit-overflow-scrolling: touch;
 
   /* HIDE SCROLLBAR */
   scrollbar-width: none;
   -ms-overflow-style: none;
 
-  scroll-snap-type: x proximity;
+  scroll-snap-type: none;
 }
 
 /* HIDE SCROLLBAR - CHROME / SAFARI */
@@ -591,3 +591,26 @@
 /* Stable ADD / quantity control; no layout/scroll animation on tap */
 .mithai-image-add { transition: none !important; overflow-anchor: none; }
 .mithai-products-grid { overflow-anchor: none; }
+/* Stable controls: both button states occupy the same fixed overlay.
+   No resizing, scroll snapping or auto-scroll during quantity updates. */
+.mithai-image-add {
+  width: 68px !important;
+  height: 27px !important;
+  transition: none !important;
+  overflow-anchor: none;
+}
+.mithai-image-add:has(.mithai-qty-control) { width: 68px !important; }
+.mithai-image-add .mithai-add-btn,
+.mithai-image-add .mithai-qty-control {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 27px;
+  transition: none !important;
+}
+.mithai-products-grid {
+  scroll-behavior: auto !important;
+  scroll-snap-type: none !important;
+  overflow-anchor: none;
+}
+.mithai-snack-item { scroll-snap-align: none !important; }
