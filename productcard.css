@@ -261,7 +261,12 @@
     height: 105px;
   }
 }
-/* IMAGE CONTAINER */
+/* ========================================
+   MITHAI ADD BUTTON - COMPLETE CSS
+   SMALL NUMBERS + SMOOTH SLIDE
+======================================== */
+
+/* PRODUCT IMAGE */
 .mithai-snack-image-box {
   position: relative !important;
   overflow: visible !important;
@@ -270,53 +275,223 @@
 /* ADD BUTTON POSITION */
 .mithai-image-add {
   position: absolute;
-  right: 5px;
-  bottom: 5px;
-  z-index: 10;
+  right: 4px;
+  bottom: 4px;
+  z-index: 20;
+
+  width: 54px;
+  height: 27px;
+
+  transition: width 0.25s ease;
 }
 
-/* ONLY ADD BUTTON */
+/* WIDTH EXTENDS AFTER ADD */
+.mithai-image-add:has(.mithai-qty-control) {
+  width: 68px;
+}
+
+/* ========================================
+   ADD BUTTON
+======================================== */
+
 .mithai-image-add .mithai-add-btn {
-  width: 62px;
-  height: 29px;
+  width: 100%;
+  height: 27px;
   margin: 0;
   padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   background: #ffffff;
-  border: 1.5px solid #E82B65;
-  border-radius: 7px;
   color: #E82B65;
-  font-family: 'Poppins', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
+
+  border: 1.5px solid #E82B65;
+  border-radius: 6px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  animation: none !important;
+  transform: none !important;
 }
 
-/* QUANTITY CONTROL */
+/* ========================================
+   QUANTITY CONTROL
+======================================== */
+
 .mithai-image-add .mithai-qty-control {
-  width: 85px;
-  height: 29px;
+  width: 100%;
+  height: 27px;
   margin: 0;
+  padding: 0;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   background: #E82B65;
-  border-radius: 7px;
   color: #ffffff;
+  border-radius: 6px;
+
   overflow: hidden;
+
+  animation: none !important;
+  transform: none !important;
 }
+
+/* ========================================
+   PLUS AND MINUS BUTTONS
+======================================== */
 
 .mithai-image-add .mithai-qty-control button {
-  width: 28px;
-  height: 29px;
+  width: 22px;
+  min-width: 22px;
+  height: 27px;
   padding: 0;
-  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   background: transparent;
+  border: none;
   color: #ffffff;
-  font-size: 18px;
+
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1;
+
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.mithai-image-add .mithai-qty-control span {
-  font-size: 12px;
+/* ========================================
+   NUMBER WINDOW
+======================================== */
+
+.mithai-image-add .mithai-number-window {
+  position: relative;
+  display: block;
+
+  flex: 1;
+  min-width: 0;
+  height: 27px;
+
+  overflow: hidden;
+
+  color: #ffffff;
+  font-size: 8px !important;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ========================================
+   OLD AND NEW NUMBERS
+======================================== */
+
+.mithai-image-add .mithai-number-old,
+.mithai-image-add .mithai-number-new {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ffffff;
+  font-size: 8px !important;
+  font-weight: 700;
+  line-height: 1;
+
+  opacity: 1 !important;
+  animation: none;
+}
+
+/* ========================================
+   NUMBER SLIDE ANIMATION
+======================================== */
+
+/* OLD NUMBER GOES UP */
+.mithai-image-add
+.mithai-number-changing
+.mithai-number-old {
+  animation: mithaiOldSlide 0.22s ease-in-out both;
+}
+
+/* NEW NUMBER COMES FROM BOTTOM */
+.mithai-image-add
+.mithai-number-changing
+.mithai-number-new {
+  animation: mithaiNewSlide 0.22s ease-in-out both;
+}
+
+/* OLD NUMBER SLIDE UP */
+@keyframes mithaiOldSlide {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+/* NEW NUMBER SLIDE UP */
+@keyframes mithaiNewSlide {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   REMOVE UNWANTED ANIMATIONS
+======================================== */
+
+.mithai-image-add .mithai-number-animate {
+  font-size: 11px !important;
+  font-weight: 200;
+}
+
+
+.mithai-image-add .mithai-add-btn,
+.mithai-image-add .mithai-qty-control {
+  transform: none !important;
+}
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 380px) {
+  .mithai-image-add {
+    right: 3px;
+    bottom: 3px;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .mithai-image-add,
+  .mithai-image-add * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
