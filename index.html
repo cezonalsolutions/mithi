@@ -1137,9 +1137,7 @@ body {
  Something Tasty Awaits
 </div>
 
-<div id="mithaiProductOne" class="mithai-products-grid">
-  <div class="mithai-loading">Loading snack...</div>
-</div>
+<div id="mithaiProductOne" class="mithai-products-grid"></div>
 
 <!-- MITHAI LOGIN: SAME PAGE, NO REDIRECT -->
 
@@ -1865,7 +1863,21 @@ function mithaiSwitchTab(button, tab) {
     })
   );
 }
+/* COMMON SHIMMER - ALL PRODUCT SECTIONS */
 
+function showMithaiShimmer(containerId, count = 4) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = Array.from({ length: count }, () => `
+    <div class="mithai-snack-item mithai-skeleton" aria-hidden="true">
+      <div class="mithai-skeleton-box mithai-skeleton-image"></div>
+      <div class="mithai-skeleton-box mithai-skeleton-price"></div>
+      <div class="mithai-skeleton-box mithai-skeleton-name"></div>
+      <div class="mithai-skeleton-box mithai-skeleton-quantity"></div>
+    </div>
+  `).join("");
+}
 
 async function loadMithaiProductOne() {
 
@@ -1873,7 +1885,7 @@ async function loadMithaiProductOne() {
     document.getElementById("mithaiProductOne");
 
   if (!container) return;
-
+showMithaiShimmer("mithaiProductOne");
   try {
 
     if (!window.mithaiSupabase) {
