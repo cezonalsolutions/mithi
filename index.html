@@ -1189,7 +1189,50 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
  Something Tasty Awaits
 </div>
 
+
+
+
 <div id="mithaiProductOne" class="mithai-products-grid"></div>
+
+
+
+
+
+
+<div class="mithai-center-banner">
+  <img
+    src="low.webp"
+    alt="MITHAI Snacks"
+    class="mithai-center-image"
+  >
+</div>
+
+
+<!-- FSSAI DETAILS -->
+<div class="mithai-fssai">
+  <img
+    src="fssai.png"
+    alt="FSSAI"
+    class="mithai-fssai-logo"
+  >
+
+  <span class="mithai-fssai-number">
+    Lic. No. 20126102001096
+  </span>
+</div>
+
+<!-- MITHAI FULL WIDTH IMAGE -->
+<div class="mithai-last-banner">
+  <img src="bottom.png" alt="MITHAI" class="mithai-last-image">
+</div>
+
+
+
+
+
+
+
+
 
 <!-- MITHAI LOGIN: SAME PAGE, NO REDIRECT -->
 
@@ -1991,10 +2034,9 @@ function createMithaiAddButton(product) {
         event.stopPropagation();
         changeQuantity(-1);
       };
-
-      const number = document.createElement("span");
-      number.textContent = qty;
-
+const number = document.createElement("span");
+number.className = "mithai-number-animate";
+number.textContent = qty;
       const plus = document.createElement("button");
       plus.type = "button";
       plus.textContent = "+";
