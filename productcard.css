@@ -614,3 +614,17 @@
   overflow-anchor: none;
 }
 .mithai-snack-item { scroll-snap-align: none !important; }
+/* RESTORED: ADD 54px -> pink quantity control 68px; no card rebuild */
+.mithai-image-add {
+  width: 54px !important;
+  transition: width .25s ease !important;
+}
+.mithai-image-add.mithai-has-quantity {
+  width: 68px !important;
+}
+.mithai-image-add:has(.mithai-qty-control) {
+  width: 54px !important;
+}
+.mithai-image-add.mithai-has-quantity:has(.mithai-qty-control) {
+  width: 68px !important;
+}
