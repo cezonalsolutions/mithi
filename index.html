@@ -982,14 +982,17 @@ body {
   text-overflow: clip;
 }
 .deliveryText { overflow: hidden; }
-.deliverySub.is-marquee {
-  display: inline-block;
-  max-width: none;
-  animation: deliverySubMarquee 7s ease-in-out infinite alternate;
-}
-@keyframes deliverySubMarquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(calc(-1 * (100% - 100px))); }
+/* Auto-fit delivery text instead of scrolling or clipping */
+.deliveryText .deliveryTitle,
+.deliveryText .deliverySub {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: visible;
+  animation: none !important;
+  transform: none !important;
+  letter-spacing: 0;
 }
 .pinkCartBar {
   width: 115px; flex: 0 0 115px; min-height: 65px;
@@ -2311,13 +2314,36 @@ function updateFreeDeliveryProgress(cartTotal) {
     if (total >= FREE_DELIVERY_TARGET) {
       title.textContent = 'Free Delivery Unlocked';
       sub.textContent = 'Your order is eligible for free delivery';
-      sub.classList.add('is-marquee');
+
     } else {
       title.textContent = 'Popular around your area';
       sub.textContent = `Shop for ₹${pending} to unlock free delivery`;
-      sub.classList.remove('is-marquee');
+
     }
   }
+  fitMithaiDeliveryText();
+}
+/* Shrink only when needed so the entire sentence stays visible. */
+function fitMithaiDeliveryText() {
+  const parent = document.querySelector('#mithaiFreeDeliveryBar .deliveryText');
+  if (!parent) return;
+  const available = parent.clientWidth;
+  if (!available) return;
+  for (const [selector, maxSize] of [['.deliveryTitle', 13], ['.deliverySub', 11]]) {
+    const el = parent.querySelector(selector);
+    if (!el) continue;
+    let size = maxSize;
+    el.style.fontSize = size + 'px';
+    while (el.scrollWidth > available && size > 5) {
+      size -= 0.25;
+      el.style.fontSize = size + 'px';
+    }
+  }
+}
+window.addEventListener('resize', fitMithaiDeliveryText);
+if (typeof ResizeObserver !== 'undefined') {
+  const deliveryTextElement = document.querySelector('#mithaiFreeDeliveryBar .deliveryText');
+  if (deliveryTextElement) new ResizeObserver(fitMithaiDeliveryText).observe(deliveryTextElement);
 }
 updateFreeDeliveryProgress(0);
 function updatePinkCartCount(count) {
