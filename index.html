@@ -943,54 +943,84 @@ body {
 /* MITHAI LOGIN FULL-SCREEN OVERLAY (NO REDIRECT) */
 
 
-/* FLOATING FREE DELIVERY PROGRESS — ABOVE BOTTOM NAV */
-.deliveryFloatBar {
+/* FREE DELIVERY + PRODUCT IMAGE CART — ABOVE BOTTOM NAV */
+.deliveryCartRow {
   position: fixed;
-  left: 16px;
-  right: 16px;
+  left: 16px; right: 16px;
   bottom: calc(84px + env(safe-area-inset-bottom));
-  min-height: 65px;
-  padding: 12px 16px;
-  background: #087f5b;
-  display: flex;
-  align-items: center;
-  border-radius: 16px;
-  overflow: hidden;
+  display: flex; align-items: stretch; gap: 8px;
   z-index: 99998;
+}
+.deliveryCartRow .deliveryFloatBar {
+  position: relative; left: auto; right: auto; bottom: auto;
+  flex: 1; min-width: 0; min-height: 65px;
+  padding: 12px 16px; background: #087f5b;
+  display: flex; align-items: center;
+  border-radius: 16px; overflow: hidden;
   box-shadow: 0 5px 20px rgba(0,0,0,.12);
 }
 .deliveryIcon {
-  position: relative;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
-  flex-shrink: 0;
+  position: relative; width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.12); display: flex;
+  align-items: center; justify-content: center;
+  margin-right: 15px; flex-shrink: 0;
 }
 .deliveryIcon i { color: #fff; font-size: 15px; }
-.freeProgressRing {
-  position: absolute;
-  inset: -5px;
-  width: 44px;
-  height: 44px;
-  transform: rotate(-90deg);
-}
+.freeProgressRing { position: absolute; inset: -5px; width: 44px; height: 44px; transform: rotate(-90deg); }
 .freeProgressRing circle { fill: none; stroke-width: 4; }
 .ringBg { stroke: rgba(255,255,255,.16); }
-.ringFill {
-  stroke: #fff;
-  stroke-linecap: round;
-  stroke-dasharray: 94.25;
-  stroke-dashoffset: 94.25;
-  transition: stroke-dashoffset .35s ease;
-}
+.ringFill { stroke: #fff; stroke-linecap: round; stroke-dasharray: 94.25; stroke-dashoffset: 94.25; transition: stroke-dashoffset .35s ease; }
 .deliveryText { flex: 1; min-width: 0; overflow: hidden; }
 .deliveryTitle { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.15; }
 .deliverySub { margin-top: 3px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.78); line-height: 1.2; }
+.pinkCartBar {
+  width: 115px; flex: 0 0 115px; min-height: 65px;
+  padding: 8px; background: #E82B65; color: #fff;
+  border: none; border-radius: 16px; display: flex;
+  align-items: center; justify-content: center; gap: 9px;
+  cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,.12);
+  -webkit-tap-highlight-color: transparent;
+}
+.pinkCartBar:active { opacity: .9; }
+/* Hide pink cart until at least one item is added */
+.pinkCartBar.is-hidden { display: none !important; }
+.pinkCartImageBox {
+  position: relative;
+  width: 44px;
+  height: 46px;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(255,255,255,.75);
+  box-shadow: 0 1px 3px rgba(0,0,0,.12);
+}
+.pinkCartProductImage {
+  position: absolute;
+  inset: 2px;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  object-fit: contain;
+  border-radius: 6px;
+}
+.cartImageExit { animation: cartSlideUp .35s ease forwards; }
+.cartImageEnter { animation: cartSlideIn .35s ease forwards; }
+@keyframes cartSlideUp { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-100%); opacity: 0; } }
+@keyframes cartSlideIn { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.pinkCartText { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; white-space: nowrap; }
+.pinkCartTitle { font-family: Arial,sans-serif; font-size: 15px; font-weight: 800; line-height: 1.1; }
+.pinkCartCount { font-family: Arial,sans-serif; font-size: 11px; font-weight: 600; line-height: 1.2; }
+@media(max-width:380px) {
+  .deliveryCartRow { left: 10px; right: 10px; gap: 6px; }
+  .deliveryCartRow .deliveryFloatBar { padding: 10px; }
+  .deliveryIcon { margin-right: 12px; }
+  .deliveryTitle { font-size: 12px; }
+  .deliverySub { font-size: 10px; }
+  .pinkCartBar { width: 98px; flex-basis: 98px; gap: 6px; padding: 6px; }
+  .pinkCartImageBox { width: 36px; height: 40px; border-radius: 8px; }
+  .pinkCartTitle { font-size: 14px; }
+  .pinkCartCount { font-size: 10px; }
+}
 body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
 
 </style>
@@ -1645,19 +1675,28 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
 
 
 
-<!-- FREE DELIVERY FLOAT BAR -->
-<div class="deliveryFloatBar" id="mithaiFreeDeliveryBar" aria-live="polite">
-  <div class="deliveryIcon">
-    <i class="fa-solid fa-person-biking" aria-hidden="true"></i>
-    <svg class="freeProgressRing" viewBox="0 0 36 36" aria-hidden="true">
-      <circle class="ringBg" cx="18" cy="18" r="15"></circle>
-      <circle class="ringFill" id="freeDeliveryRing" cx="18" cy="18" r="15"></circle>
-    </svg>
+<!-- FREE DELIVERY + PINK PRODUCT CART -->
+<div class="deliveryCartRow">
+  <div class="deliveryFloatBar" id="mithaiFreeDeliveryBar" aria-live="polite">
+    <div class="deliveryIcon">
+      <i class="fa-solid fa-person-biking" aria-hidden="true"></i>
+      <svg class="freeProgressRing" viewBox="0 0 36 36" aria-hidden="true">
+        <circle class="ringBg" cx="18" cy="18" r="15"></circle>
+        <circle class="ringFill" id="freeDeliveryRing" cx="18" cy="18" r="15"></circle>
+      </svg>
+    </div>
+    <div class="deliveryText">
+      <div class="deliveryTitle">Popular around your area</div>
+      <div class="deliverySub">Shop for ₹200 to unlock free delivery</div>
+    </div>
   </div>
-  <div class="deliveryText">
-    <div class="deliveryTitle">Popular around your area</div>
-    <div class="deliverySub">Shop for ₹200 to unlock free delivery</div>
-  </div>
+  <button class="pinkCartBar is-hidden" id="mithaiPinkCartBar" type="button" onclick="openMithaiCart()" aria-label="Open cart" aria-hidden="true">
+    <div class="pinkCartImageBox" id="pinkCartImageBox" aria-hidden="true"></div>
+    <div class="pinkCartText">
+      <span class="pinkCartTitle">Cart</span>
+      <span class="pinkCartCount" id="pinkCartCount">0 items</span>
+    </div>
+  </button>
 </div>
 
 <!-- MITHAI BOTTOM NAV -->
@@ -2086,6 +2125,15 @@ number.textContent = qty;
     if (typeof updateFreeDeliveryProgress === "function") {
       updateFreeDeliveryProgress(cartTotal);
     }
+    updatePinkCartCount([...mithaiCart.values()].reduce((sum, item) => sum + item.qty, 0));
+    if (amount > 0 && next > 0) {
+      updatePinkCartProductImage(product.image1);
+    } else if (mithaiCart.size === 0) {
+      updatePinkCartProductImage(null);
+    } else if (next === 0) {
+      const remaining = [...mithaiCart.values()].at(-1);
+      updatePinkCartProductImage(remaining?.product?.image1);
+    }
 
     window.dispatchEvent(
       new CustomEvent("mithaiCartUpdated", {
@@ -2242,7 +2290,49 @@ function updateFreeDeliveryProgress(cartTotal) {
   }
 }
 updateFreeDeliveryProgress(0);
-// Call updateFreeDeliveryProgress(cartTotal) whenever your cart total changes.
+function updatePinkCartCount(count) {
+  const quantity = Math.max(0, Math.floor(Number(count) || 0));
+  const el = document.getElementById("pinkCartCount");
+  const cartBar = document.getElementById("mithaiPinkCartBar");
+  if (el) el.textContent = quantity + (quantity === 1 ? " item" : " items");
+  if (cartBar) {
+    const hasItems = quantity > 0;
+    cartBar.classList.toggle("is-hidden", !hasItems);
+    cartBar.setAttribute("aria-hidden", String(!hasItems));
+  }
+  if (quantity === 0) updatePinkCartProductImage(null);
+}
+function updatePinkCartProductImage(imageUrl) {
+  const box = document.getElementById("pinkCartImageBox");
+  if (!box) return;
+  if (!imageUrl) { box.replaceChildren(); return; }
+  const current = box.querySelector(".pinkCartProductImage:last-child");
+  if (current && current.getAttribute("src") === imageUrl) return;
+  // Clean up previous animations if products are added quickly.
+  box.querySelectorAll(".pinkCartProductImage:not(:last-child)").forEach(img => img.remove());
+  const next = document.createElement("img");
+  next.className = "pinkCartProductImage cartImageEnter";
+  next.src = imageUrl;
+  next.alt = "";
+  if (current) {
+    current.classList.remove("cartImageEnter");
+    current.classList.add("cartImageExit");
+  }
+  box.appendChild(next);
+  next.addEventListener("animationend", () => {
+    if (!next.isConnected) return;
+    box.querySelectorAll(".pinkCartProductImage").forEach(img => {
+      if (img !== next) img.remove();
+    });
+    next.classList.remove("cartImageEnter");
+  }, { once: true });
+}
+function openMithaiCart() {
+  if (typeof window.openCart === "function") window.openCart();
+  else window.dispatchEvent(new CustomEvent("mithaiOpenCart"));
+}
+// The existing product Add / +/- controls update the count and product image.
+
 </script>
 
 </body>
