@@ -1947,6 +1947,114 @@ function showMithaiShimmer(containerId, count = 4) {
   `).join("");
 }
 
+/* MITHAI PRODUCT ADD / QUANTITY */
+
+const mithaiCart = new Map();
+
+function createMithaiAddButton(product) {
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "mithai-image-add";
+
+  const productId = String(product.id);
+
+  function renderButton() {
+
+    const qty = mithaiCart.get(productId)?.qty || 0;
+
+    wrapper.replaceChildren();
+
+    if (qty === 0) {
+
+      const addBtn = document.createElement("button");
+      addBtn.type = "button";
+      addBtn.className = "mithai-add-btn";
+      addBtn.textContent = "ADD";
+
+      addBtn.onclick = function(event) {
+        event.stopPropagation();
+        changeQuantity(1);
+      };
+
+      wrapper.appendChild(addBtn);
+
+    } else {
+
+      const control = document.createElement("div");
+      control.className = "mithai-qty-control";
+
+      const minus = document.createElement("button");
+      minus.type = "button";
+      minus.textContent = "−";
+
+      minus.onclick = function(event) {
+        event.stopPropagation();
+        changeQuantity(-1);
+      };
+
+      const number = document.createElement("span");
+      number.textContent = qty;
+
+      const plus = document.createElement("button");
+      plus.type = "button";
+      plus.textContent = "+";
+
+      plus.onclick = function(event) {
+        event.stopPropagation();
+        changeQuantity(1);
+      };
+
+      control.append(minus, number, plus);
+      wrapper.appendChild(control);
+    }
+  }
+
+  function changeQuantity(amount) {
+
+    const current = mithaiCart.get(productId)?.qty || 0;
+    const next = Math.max(0, current + amount);
+
+    if (next === 0) {
+      mithaiCart.delete(productId);
+    } else {
+      mithaiCart.set(productId, {
+        product: product,
+        qty: next
+      });
+    }
+
+    renderButton();
+
+    const cartTotal = [...mithaiCart.values()].reduce(
+      (sum, item) => {
+        const price = Number(
+          item.product.mithai_price ??
+          item.product.discount_price ??
+          item.product.original_price ??
+          0
+        );
+
+        return sum + price * item.qty;
+      },
+      0
+    );
+
+    if (typeof updateFreeDeliveryProgress === "function") {
+      updateFreeDeliveryProgress(cartTotal);
+    }
+
+    window.dispatchEvent(
+      new CustomEvent("mithaiCartUpdated", {
+        detail: { cartTotal }
+      })
+    );
+  }
+
+  renderButton();
+
+  return wrapper;
+}
+
 async function loadMithaiProductOne() {
 
   const container =
@@ -1992,7 +2100,9 @@ showMithaiShimmer("mithaiProductOne");
 
         imageBox.appendChild(image);
       }
-
+// ADD BUTTON INSIDE IMAGE BOTTOM-RIGHT
+const addButton = createMithaiAddButton(product);
+imageBox.appendChild(addButton);
       // PRICE ROW
       const priceRow = document.createElement("div");
       priceRow.className = "mithai-snack-price-row";
