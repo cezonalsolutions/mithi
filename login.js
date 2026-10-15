@@ -1,622 +1,264 @@
+/* MITHAI demo login: database lookup, spinner, and same-page overlay.
+   DEMO ONLY: 123456 is not real phone verification. */
+(() => {
+  'use strict';
+  const DEMO_OTP = '123456';
+  const SESSION_KEY = 'mithai_demo_session';
+  let step = 'mobile', mobile = '', name = '', existing = false;
+  let version = 0, checking = false, verifying = false;
+  let overlay, mobileForm, nameForm, otpForm, mobileInput, nameInput,
+      otpInput, mobileError, nameError, otpError, otpMobile, nextButton, verifyButton;
 
-/* ==========================================
-   MITHAI LOGIN — SUPABASE DEMO
-   Mobile → Name (new users) → OTP → Close
-   Next Button: Small Loading Spinner
-========================================== */
-
-const MITHAI_DEMO_OTP = "123456";
-const MITHAI_SESSION_KEY = "mithai_demo_session";
-
-// Use your existing Supabase client
-const mithaiDB = supabaseClient;
-
-/* ==========================================
-   ELEMENTS
-========================================== */
-
-const mithaiLoginOverlay =
-  document.getElementById("mithaiLoginOverlay");
-
-const mithaiLoginForm =
-  document.getElementById("loginForm");
-
-const mithaiNameForm =
-  document.getElementById("mithaiNameForm");
-
-const mithaiOtpForm =
-  document.getElementById("mithaiOtpForm");
-
-const mithaiMobileInput =
-  document.getElementById("mobileNumber");
-
-const mithaiNameInput =
-  document.getElementById("mithaiUserName");
-
-const mithaiOtpInput =
-  document.getElementById("mithaiOtpInput");
-
-const mithaiLoginError =
-  document.getElementById("loginError");
-
-const mithaiNameError =
-  document.getElementById("mithaiNameError");
-
-const mithaiOtpError =
-  document.getElementById("mithaiOtpError");
-
-const mithaiOtpMobile =
-  document.getElementById("mithaiOtpMobile");
-
-const mithaiNextButton =
-  mithaiLoginForm.querySelector('button[type="submit"]');
-
-const mithaiOtpButton =
-  mithaiOtpForm.querySelector('button[type="submit"]');
-
-/* ==========================================
-   SMALL SPINNER CSS — INJECT ONCE
-========================================== */
-
-if (!document.getElementById("mithaiSpinnerStyle")) {
-
-  const style = document.createElement("style");
-
-  style.id = "mithaiSpinnerStyle";
-
-  style.textContent = `
-    #mithaiLoginOverlay .mithai-btn-spinner {
-      display: inline-block;
-      width: 19px;
-      height: 19px;
-      border: 2.5px solid rgba(255,255,255,0.35);
-      border-top-color: #ffffff;
-      border-radius: 50%;
-      animation: mithaiSpin 0.65s linear infinite;
-      vertical-align: middle;
+  function db() {
+    const client = window.mithaiSupabase;
+    if (!client || typeof client.from !== 'function') {
+      throw new Error('Supabase not initialized. Initialize window.mithaiSupabase in index.html.');
     }
+    return client;
+  }
 
-    @keyframes mithaiSpin {
-      to {
-        transform: rotate(360deg);
-      }
+  function spinner(button, active, text) {
+    if (!button) return;
+    button.disabled = active;
+    button.setAttribute('aria-busy', String(active));
+    if (active) {
+      button.innerHTML = '<span class="mithai-btn-spinner" aria-hidden="true"></span>';
+    } else {
+      button.textContent = text;
     }
+  }
 
-    #mithaiLoginOverlay .login-next-btn:disabled {
-      cursor: wait;
-      opacity: 0.9;
+  function showStep(value) {
+    step = value;
+    mobileForm.style.display = value === 'mobile' ? 'block' : 'none';
+    nameForm.style.display = value === 'name' ? 'block' : 'none';
+    otpForm.style.display = value === 'otp' ? 'block' : 'none';
+  }
+
+  function open() {
+    if (!overlay) return;
+    ++version;
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('mithai-login-open');
+    mobileForm.reset(); nameForm.reset(); otpForm.reset();
+    mobileError.textContent = nameError.textContent = otpError.textContent = '';
+    mobile = ''; name = ''; existing = false;
+    checking = verifying = false;
+    spinner(nextButton, false, 'Next');
+    spinner(verifyButton, false, 'Verify');
+    showStep('mobile');
+  }
+
+  function close() {
+    ++version;
+    overlay?.classList.remove('is-open');
+    overlay?.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('mithai-login-open');
+    document.activeElement?.blur?.();
+  }
+
+  function back() {
+    ++version;
+    checking = verifying = false;
+    spinner(nextButton, false, 'Next');
+    spinner(verifyButton, false, 'Verify');
+    if (step === 'otp') {
+      otpInput.value = '';
+      otpError.textContent = '';
+      showStep(existing ? 'mobile' : 'name');
+    } else if (step === 'name') {
+      showStep('mobile');
+    } else {
+      close();
     }
-  `;
-
-  document.head.appendChild(style);
-}
-
-/* ==========================================
-   BUTTON SPINNER
-========================================== */
-
-function mithaiSetButtonLoading(button, loading, label) {
-
-  button.disabled = loading;
-
-  if (loading) {
-
-    // Hide text and show only spinner
-    button.innerHTML =
-      '<span class="mithai-btn-spinner" aria-hidden="true"></span>';
-
-    button.setAttribute("aria-label", "Loading");
-
-  } else {
-
-    button.textContent = label;
-    button.removeAttribute("aria-label");
-  }
-}
-
-/* ==========================================
-   STATE
-========================================== */
-
-let mithaiCurrentStep = "mobile";
-let mithaiPendingMobile = "";
-let mithaiPendingName = "";
-let mithaiExistingUser = false;
-
-let mithaiCheckingMobile = false;
-let mithaiVerifyingOtp = false;
-let mithaiRequestVersion = 0;
-
-/* ==========================================
-   SWITCH LOGIN STEPS
-========================================== */
-
-function mithaiShowLoginStep(step) {
-
-  mithaiCurrentStep = step;
-
-  mithaiLoginForm.style.display = "none";
-  mithaiNameForm.style.display = "none";
-  mithaiOtpForm.style.display = "none";
-
-  if (step === "mobile") {
-    mithaiLoginForm.style.display = "block";
   }
 
-  if (step === "name") {
-    mithaiNameForm.style.display = "block";
-  }
+  // Keep functions accessible to existing HTML onclick attributes.
+  window.openMenu = open;
+  window.openMithaiLogin = open;
+  window.closeMithaiLogin = close;
+  window.mithaiLoginBack = back;
+  window.mithaiGetLoggedInUser = () => {
+    try { return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null'); }
+    catch { return null; }
+  };
+  window.mithaiLogout = () => {
+    localStorage.removeItem(SESSION_KEY);
+    window.dispatchEvent(new CustomEvent('mithaiDemoLogout'));
+  };
 
-  if (step === "otp") {
-    mithaiOtpForm.style.display = "block";
-  }
-}
-
-/* ==========================================
-   OPEN LOGIN
-========================================== */
-
-function openMenu() {
-  openMithaiLogin();
-}
-
-function openMithaiLogin() {
-
-  mithaiRequestVersion++;
-
-  mithaiLoginOverlay.classList.add("is-open");
-
-  mithaiLoginOverlay.setAttribute(
-    "aria-hidden",
-    "false"
-  );
-
-  document.body.classList.add("mithai-login-open");
-
-  mithaiLoginForm.reset();
-  mithaiNameForm.reset();
-  mithaiOtpForm.reset();
-
-  mithaiLoginError.textContent = "";
-  mithaiNameError.textContent = "";
-  mithaiOtpError.textContent = "";
-
-  mithaiPendingMobile = "";
-  mithaiPendingName = "";
-  mithaiExistingUser = false;
-
-  mithaiCheckingMobile = false;
-  mithaiVerifyingOtp = false;
-
-  mithaiSetButtonLoading(mithaiNextButton, false, "Next");
-  mithaiSetButtonLoading(mithaiOtpButton, false, "Verify & Login");
-
-  mithaiShowLoginStep("mobile");
-}
-
-/* ==========================================
-   CLOSE LOGIN
-========================================== */
-
-function closeMithaiLogin() {
-
-  mithaiRequestVersion++;
-
-  mithaiLoginOverlay.classList.remove("is-open");
-
-  mithaiLoginOverlay.setAttribute(
-    "aria-hidden",
-    "true"
-  );
-
-  document.body.classList.remove("mithai-login-open");
-
-  document.activeElement?.blur?.();
-}
-
-/* ==========================================
-   BACK BUTTON
-========================================== */
-
-function mithaiLoginBack() {
-
-  mithaiRequestVersion++;
-
-  if (mithaiCurrentStep === "otp") {
-
-    mithaiOtpInput.value = "";
-    mithaiOtpError.textContent = "";
-
-    mithaiShowLoginStep(
-      mithaiExistingUser ? "mobile" : "name"
-    );
-
-    return;
-  }
-
-  if (mithaiCurrentStep === "name") {
-
-    mithaiNameError.textContent = "";
-    mithaiShowLoginStep("mobile");
-
-    return;
-  }
-
-  closeMithaiLogin();
-}
-
-/* ==========================================
-   DATABASE LOOKUP
-========================================== */
-
-async function mithaiFindUser(mobile) {
-
-  // Check mithai_profiles
-  const { data: profile, error: profileError } =
-    await mithaiDB
-      .from("mithai_profiles")
-      .select("name")
-      .eq("mobile_number", mobile)
-      .limit(1)
-      .maybeSingle();
-
-  if (profileError) {
-    throw profileError;
-  }
-
-  const profileName =
-    typeof profile?.name === "string"
-      ? profile.name.trim()
-      : "";
-
-  if (profileName) {
-    return {
-      name: profileName,
-      source: "mithai_profiles"
-    };
-  }
-
-  // Check mithai_orders
-  const { data: orders, error: ordersError } =
-    await mithaiDB
-      .from("mithai_orders")
-      .select("customer_name")
-      .eq("mobile_number", mobile)
+  async function findUser(number) {
+    const { data: profiles, error: pe } = await db()
+      .from('mithai_profiles')
+      .select('name')
+      .eq('mobile_number', number)
       .limit(1);
+    if (pe) throw pe;
+    const profileName = profiles?.find(p => typeof p.name === 'string' && p.name.trim())?.name.trim();
+    if (profileName) return profileName;
 
-  if (ordersError) {
-    throw ordersError;
+    const { data: orders, error: oe } = await db()
+      .from('mithai_orders')
+      .select('customer_name')
+      .eq('mobile_number', number)
+      .limit(20);
+    if (oe) throw oe;
+    return orders?.find(o => typeof o.customer_name === 'string' && o.customer_name.trim())?.customer_name.trim() || null;
   }
 
-  const orderName = orders
-    ?.map(order => order.customer_name)
-    .find(name =>
-      typeof name === "string" && name.trim()
-    );
-
-  if (orderName) {
-    return {
-      name: orderName.trim(),
-      source: "mithai_orders"
-    };
-  }
-
-  return null;
-}
-
-/* ==========================================
-   MOBILE INPUT
-========================================== */
-
-mithaiMobileInput.addEventListener("input", () => {
-
-  mithaiMobileInput.value =
-    mithaiMobileInput.value
-      .replace(/\D/g, "")
-      .slice(0, 10);
-
-  mithaiLoginError.textContent = "";
-});
-
-/* ==========================================
-   STEP 1 — MOBILE NUMBER CHECK
-========================================== */
-
-mithaiLoginForm.addEventListener(
-  "submit",
-  async (event) => {
-
-    event.preventDefault();
-
-    if (mithaiCheckingMobile) return;
-
-    const mobile = mithaiMobileInput.value.trim();
-
-    if (!/^[6-9]\d{9}$/.test(mobile)) {
-
-      mithaiLoginError.textContent =
-        "Enter a valid 10-digit mobile number";
-
+  function init() {
+    overlay = document.getElementById('mithaiLoginOverlay');
+    mobileForm = document.getElementById('loginForm');
+    nameForm = document.getElementById('mithaiNameForm');
+    otpForm = document.getElementById('mithaiOtpForm');
+    mobileInput = document.getElementById('mobileNumber');
+    nameInput = document.getElementById('mithaiUserName');
+    otpInput = document.getElementById('mithaiOtpInput');
+    mobileError = document.getElementById('loginError');
+    nameError = document.getElementById('mithaiNameError');
+    otpError = document.getElementById('mithaiOtpError');
+    otpMobile = document.getElementById('mithaiOtpMobile');
+    if ([overlay, mobileForm, nameForm, otpForm, mobileInput, nameInput,
+         otpInput, mobileError, nameError, otpError, otpMobile].some(x => !x)) {
+      console.error('MITHAI login: Missing HTML element; check login form IDs.');
       return;
     }
+    nextButton = mobileForm.querySelector('button[type="submit"]');
+    verifyButton = otpForm.querySelector('button[type="submit"]');
+    if (!nextButton || !verifyButton) return;
 
-    mithaiCheckingMobile = true;
-
-    const requestId = ++mithaiRequestVersion;
-
-    mithaiLoginError.textContent = "";
-
-    // NEXT TEXT HIDE → SMALL SPINNER
-    mithaiSetButtonLoading(mithaiNextButton, true, "Next");
-
-    try {
-
-      const user = await mithaiFindUser(mobile);
-
-      if (requestId !== mithaiRequestVersion) {
-        return;
-      }
-
-      mithaiPendingMobile = mobile;
-
-      if (user) {
-
-        // Existing user → Skip name
-        mithaiExistingUser = true;
-        mithaiPendingName = user.name;
-
-        mithaiOtpMobile.textContent =
-          "+91 " + mobile;
-
-        mithaiOtpInput.value = "";
-
-        mithaiShowLoginStep("otp");
-
-      } else {
-
-        // New user → Ask name
-        mithaiExistingUser = false;
-        mithaiPendingName = "";
-
-        mithaiNameInput.value = "";
-
-        mithaiShowLoginStep("name");
-      }
-
-    } catch (error) {
-
-      if (requestId !== mithaiRequestVersion) {
-        return;
-      }
-
-      console.error("MITHAI lookup error:", error);
-
-      mithaiLoginError.textContent =
-        "Unable to check mobile number. Try again.";
-
-    } finally {
-
-      if (requestId === mithaiRequestVersion) {
-        mithaiCheckingMobile = false;
-        mithaiSetButtonLoading(mithaiNextButton, false, "Next");
-      }
-    }
-  }
-);
-
-/* ==========================================
-   STEP 2 — ENTER NAME
-========================================== */
-
-mithaiNameInput.addEventListener("input", () => {
-  mithaiNameError.textContent = "";
-});
-
-mithaiNameForm.addEventListener(
-  "submit",
-  (event) => {
-
-    event.preventDefault();
-
-    const name = mithaiNameInput.value
-      .trim()
-      .replace(/\s+/g, " ");
-
-    if (name.length < 2) {
-
-      mithaiNameError.textContent =
-        "Please enter your name";
-
-      return;
+    if (!document.getElementById('mithaiSpinnerStyle')) {
+      const style = document.createElement('style');
+      style.id = 'mithaiSpinnerStyle';
+      style.textContent = `
+        #mithaiLoginOverlay .mithai-btn-spinner {
+          display:inline-block;width:18px;height:18px;border-radius:50%;
+          border:2.5px solid rgba(255,255,255,.35);border-top-color:white;
+          animation:mithaiButtonSpin .65s linear infinite;vertical-align:middle;
+        }
+        @keyframes mithaiButtonSpin { to { transform:rotate(360deg); } }
+        #mithaiLoginOverlay .login-next-btn:disabled { cursor:wait; }
+      `;
+      document.head.appendChild(style);
     }
 
-    mithaiPendingName = name;
+    mobileInput.addEventListener('input', () => {
+      mobileInput.value = mobileInput.value.replace(/\D/g, '').slice(0, 10);
+      mobileError.textContent = '';
+    });
+    otpInput.addEventListener('input', () => {
+      otpInput.value = otpInput.value.replace(/\D/g, '').slice(0, 6);
+      otpError.textContent = '';
+    });
+    nameInput.addEventListener('input', () => { nameError.textContent = ''; });
 
-    mithaiNameError.textContent = "";
-
-    mithaiOtpMobile.textContent =
-      "+91 " + mithaiPendingMobile;
-
-    mithaiOtpInput.value = "";
-
-    mithaiShowLoginStep("otp");
-  }
-);
-
-/* ==========================================
-   OTP INPUT
-========================================== */
-
-mithaiOtpInput.addEventListener("input", () => {
-
-  mithaiOtpInput.value =
-    mithaiOtpInput.value
-      .replace(/\D/g, "")
-      .slice(0, 6);
-
-  mithaiOtpError.textContent = "";
-});
-
-/* ==========================================
-   STEP 3 — VERIFY OTP + SAVE DATABASE
-========================================== */
-
-mithaiOtpForm.addEventListener(
-  "submit",
-  async (event) => {
-
-    event.preventDefault();
-
-    if (mithaiVerifyingOtp) return;
-
-    const otp = mithaiOtpInput.value.trim();
-
-    if (otp !== MITHAI_DEMO_OTP) {
-
-      mithaiOtpError.textContent =
-        "Incorrect OTP. Please try again.";
-
-      return;
-    }
-
-    if (!mithaiPendingMobile || !mithaiPendingName) {
-
-      mithaiOtpError.textContent =
-        "Please restart login.";
-
-      return;
-    }
-
-    mithaiVerifyingOtp = true;
-
-    const requestId = ++mithaiRequestVersion;
-
-    mithaiOtpError.textContent = "";
-
-    // Show spinner on Verify & Login too
-    mithaiSetButtonLoading(
-      mithaiOtpButton,
-      true,
-      "Verify & Login"
-    );
-
-    try {
-
-      const { data: profile, error: checkError } =
-        await mithaiDB
-          .from("mithai_profiles")
-          .select("mobile_number")
-          .eq("mobile_number", mithaiPendingMobile)
-          .limit(1)
-          .maybeSingle();
-
-      if (checkError) throw checkError;
-
-      if (requestId !== mithaiRequestVersion) {
+    mobileForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (checking) return;
+      const number = mobileInput.value.trim();
+      if (!/^[6-9]\d{9}$/.test(number)) {
+        mobileError.textContent = 'Enter a valid 10-digit mobile number';
         return;
       }
-
-      // Save only if profile doesn't exist
-      if (!profile) {
-
-        const { error: insertError } =
-          await mithaiDB
-            .from("mithai_profiles")
-            .insert({
-              mobile_number: mithaiPendingMobile,
-              name: mithaiPendingName
-            });
-
-        if (insertError) throw insertError;
+      checking = true;
+      const request = ++version;
+      mobileError.textContent = '';
+      spinner(nextButton, true, 'Next');
+      try {
+        const found = await findUser(number);
+        if (request !== version) return;
+        mobile = number;
+        existing = !!found;
+        name = found || '';
+        if (existing) {
+          otpMobile.textContent = '+91 ' + mobile;
+          otpInput.value = '';
+          showStep('otp');
+        } else {
+          nameInput.value = '';
+          showStep('name');
+        }
+      } catch (error) {
+        if (request !== version) return;
+        console.error('MITHAI mobile lookup:', error);
+        mobileError.textContent = 'Unable to check mobile number. Please try again.';
+      } finally {
+        if (request === version) {
+          checking = false;
+          spinner(nextButton, false, 'Next');
+        }
       }
+    });
 
-      if (requestId !== mithaiRequestVersion) {
+    nameForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const entered = nameInput.value.trim().replace(/\s+/g, ' ');
+      if (entered.length < 2) {
+        nameError.textContent = 'Please enter your name';
         return;
       }
+      name = entered;
+      nameError.textContent = '';
+      otpMobile.textContent = '+91 ' + mobile;
+      otpInput.value = '';
+      showStep('otp');
+    });
 
-      const session = {
-        name: mithaiPendingName,
-        mobile_number: mithaiPendingMobile,
-        loggedInAt: new Date().toISOString()
-      };
-
-      localStorage.setItem(
-        MITHAI_SESSION_KEY,
-        JSON.stringify(session)
-      );
-
-      window.dispatchEvent(
-        new CustomEvent("mithaiDemoLoginSuccess", {
-          detail: session
-        })
-      );
-
-      // Auto close — no success screen
-      closeMithaiLogin();
-
-    } catch (error) {
-
-      if (requestId !== mithaiRequestVersion) {
+    otpForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if (verifying) return;
+      if (otpInput.value.trim() !== DEMO_OTP) {
+        otpError.textContent = 'Incorrect OTP. Please try again.';
         return;
       }
-
-      console.error("MITHAI save error:", error);
-
-      mithaiOtpError.textContent =
-        "Unable to save login details. Try again.";
-
-    } finally {
-
-      if (requestId === mithaiRequestVersion) {
-        mithaiVerifyingOtp = false;
-        mithaiSetButtonLoading(
-          mithaiOtpButton,
-          false,
-          "Verify & Login"
-        );
+      if (!mobile || !name) {
+        otpError.textContent = 'Please restart login.';
+        return;
       }
-    }
+      verifying = true;
+      const request = ++version;
+      otpError.textContent = '';
+      spinner(verifyButton, true, 'Verify');
+      try {
+        const { data: profiles, error: checkError } = await db()
+          .from('mithai_profiles')
+          .select('mobile_number')
+          .eq('mobile_number', mobile)
+          .limit(1);
+        if (checkError) throw checkError;
+        if (request !== version) return;
+        if (!profiles?.length) {
+          const { error: insertError } = await db()
+            .from('mithai_profiles')
+            .insert({ mobile_number: mobile, name });
+          if (insertError) throw insertError;
+        }
+        if (request !== version) return;
+        const session = { name, mobile_number: mobile, loggedInAt: new Date().toISOString() };
+        localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        close();
+        window.dispatchEvent(new CustomEvent('mithaiDemoLoginSuccess', { detail: session }));
+      } catch (error) {
+        if (request !== version) return;
+        console.error('MITHAI profile save:', error);
+        otpError.textContent = 'Unable to save login details. Please try again.';
+      } finally {
+        if (request === version) {
+          verifying = false;
+          spinner(verifyButton, false, 'Verify');
+        }
+      }
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && overlay.classList.contains('is-open')) back();
+    });
   }
-);
 
-/* ==========================================
-   ESCAPE KEY
-========================================== */
-
-document.addEventListener("keydown", (event) => {
-
-  if (
-    event.key === "Escape" &&
-    mithaiLoginOverlay.classList.contains("is-open")
-  ) {
-    mithaiLoginBack();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
   }
-});
-
-/* ==========================================
-   GET LOGGED-IN USER
-========================================== */
-
-function mithaiGetLoggedInUser() {
-
-  try {
-    return JSON.parse(
-      localStorage.getItem(MITHAI_SESSION_KEY) || "null"
-    );
-  } catch (error) {
-    return null;
-  }
-}
-
-/* ==========================================
-   LOGOUT
-========================================== */
-
-function mithaiLogout() {
-
-  localStorage.removeItem(MITHAI_SESSION_KEY);
-
-  window.dispatchEvent(
-    new CustomEvent("mithaiDemoLogout")
-  );
-}
+})();
