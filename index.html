@@ -2312,6 +2312,39 @@ loadMithaiProductOne();
 
 <script>
 const FREE_DELIVERY_TARGET = 200;
+/* Keep every delivery message fully visible, including long ₹ amounts. */
+function fitMithaiDeliveryText() {
+  const area = document.querySelector('#mithaiFreeDeliveryBar .deliveryText');
+  if (!area) return;
+  const width = area.clientWidth;
+  if (!width) return;
+  const canvas = fitMithaiDeliveryText.canvas || (fitMithaiDeliveryText.canvas = document.createElement('canvas'));
+  const ctx = canvas.getContext('2d');
+  for (const [selector, base, minimum] of [['.deliveryTitle', 13, 8], ['.deliverySub', 11, 7]]) {
+    const element = area.querySelector(selector);
+    if (!element) continue;
+    element.style.animation = 'none';
+    element.style.transform = 'none';
+    element.style.display = 'block';
+    element.style.whiteSpace = 'nowrap';
+    element.style.maxWidth = '100%';
+    const weight = getComputedStyle(element).fontWeight;
+    const family = getComputedStyle(element).fontFamily;
+    let size = base;
+    while (size > minimum) {
+      ctx.font = `${weight} ${size}px ${family}`;
+      if (ctx.measureText(element.textContent).width <= width - 2) break;
+      size -= 0.25;
+    }
+    element.style.fontSize = `${size}px`;
+    element.style.letterSpacing = size === minimum ? '-0.2px' : 'normal';
+  }
+}
+window.addEventListener('resize', fitMithaiDeliveryText, {passive:true});
+if (window.ResizeObserver) {
+  new ResizeObserver(() => requestAnimationFrame(fitMithaiDeliveryText))
+    .observe(document.querySelector('#mithaiFreeDeliveryBar .deliveryText'));
+}
 function updateFreeDeliveryProgress(cartTotal) {
   const total = Math.max(0, Number(cartTotal) || 0);
   const pending = Math.max(FREE_DELIVERY_TARGET - total, 0);
@@ -2324,13 +2357,14 @@ function updateFreeDeliveryProgress(cartTotal) {
     if (total >= FREE_DELIVERY_TARGET) {
       title.textContent = 'Free Delivery Unlocked';
       sub.textContent = 'Your order is eligible for free delivery';
-      sub.classList.add('is-marquee');
+      sub.classList.remove('is-marquee');
     } else {
       title.textContent = 'Popular around your area';
       sub.textContent = `Shop for ₹${pending} to unlock free delivery`;
       sub.classList.remove('is-marquee');
     }
   }
+  requestAnimationFrame(fitMithaiDeliveryText);
 }
 updateFreeDeliveryProgress(0);
 function updatePinkCartCount(count) {
@@ -2402,21 +2436,21 @@ function openMithaiCart() {
     } catch (_) {}
     try { if (navigator.vibrate) navigator.vibrate(12); } catch (_) {}
   }
-  // Haptic ONLY for product ADD and quantity +/- buttons.
+  // Haptics only on deliberate controls, never blank page touches.
   // Event delegation supports dynamically rendered product cards.
-  function isProductQuantityButton(target) {
+  function isMithaiHapticTarget(target) {
     return target instanceof Element && Boolean(target.closest(
-      '.mithai-add-btn, .mithai-qty-control button'
+      '.mithai-add-btn, .mithai-qty-control button, .mithai-bottom-nav .mithai-nav-item, .mithai-order-now, .mithai-location, .mithai-snack-image, .mithai-menu'
     ));
   }
   document.addEventListener("pointerdown", function (event) {
     if (event.pointerType === "mouse" || event.isPrimary === false) return;
-    if (isProductQuantityButton(event.target)) mithaiHaptic();
+    if (isMithaiHapticTarget(event.target)) mithaiHaptic();
   }, { passive: true, capture: true });
   // Accessibility: keyboard activation also receives feedback.
   document.addEventListener("keydown", function (event) {
     if (event.repeat || (event.key !== "Enter" && event.key !== " ")) return;
-    if (isProductQuantityButton(event.target)) mithaiHaptic();
+    if (isMithaiHapticTarget(event.target)) mithaiHaptic();
   }, { passive: true, capture: true });
   window.mithaiHaptic = mithaiHaptic;
 })();
