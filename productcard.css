@@ -130,16 +130,13 @@
 
 .mithai-snack-name {
   margin-top: 8px;
-
-  font-size: 14px;
-  font-weight: 200;
-  line-height: 1.3;
-
+  font-family: 'Poppins', sans-serif !important;
+  font-size: 13px;
+  font-weight: 900 !important;
+  line-height: 1.5;
   color: #17243b;
-
   overflow-wrap: break-word;
 }
-
 /* =========================================
    QUANTITY
 ========================================= */
