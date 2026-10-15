@@ -1051,6 +1051,8 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
   font-size: clamp(9px, 2.8vw, 13px) !important;
   letter-spacing: clamp(0px, 0.2vw, 1px);
 }
+/* Prevent browser scroll anchoring during ADD / quantity rerenders. */
+.mithai-image-add, .mithai-qty-control, .mithai-add-btn { overflow-anchor: none; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
@@ -2135,11 +2137,14 @@ number.textContent = qty;
 
   function changeQuantity(amount) {
 
+    // Preserve the exact viewport when iOS replaces the focused ADD/+/- button.
+    const pageY = window.scrollY;
+    const pageX = window.scrollX;
     const current = mithaiCart.get(productId)?.qty || 0;
-     if (document.activeElement instanceof HTMLElement &&
-    wrapper.contains(document.activeElement)) {
-  document.activeElement.blur();
-}
+    if (document.activeElement instanceof HTMLElement &&
+        wrapper.contains(document.activeElement)) {
+      document.activeElement.blur();
+    }
     const next = Math.max(0, current + amount);
 
     if (next === 0) {
@@ -2185,6 +2190,12 @@ number.textContent = qty;
         detail: { cartTotal }
       })
     );
+
+    // Restore after DOM updates, and once more after WebKit's layout pass.
+    window.scrollTo({ left: pageX, top: pageY, behavior: "instant" });
+    requestAnimationFrame(() => {
+      window.scrollTo({ left: pageX, top: pageY, behavior: "instant" });
+    });
   }
 
   renderButton();
