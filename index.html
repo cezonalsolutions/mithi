@@ -972,7 +972,25 @@ body {
 .ringFill { stroke: #fff; stroke-linecap: round; stroke-dasharray: 94.25; stroke-dashoffset: 94.25; transition: stroke-dashoffset .35s ease; }
 .deliveryText { flex: 1; min-width: 0; overflow: hidden; }
 .deliveryTitle { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.15; }
-.deliverySub { margin-top: 3px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.78); line-height: 1.2; }
+.deliverySub {
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,.78);
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: clip;
+}
+.deliveryText { overflow: hidden; }
+.deliverySub.is-marquee {
+  display: inline-block;
+  max-width: none;
+  animation: deliverySubMarquee 7s ease-in-out infinite alternate;
+}
+@keyframes deliverySubMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-1 * (100% - 100px))); }
+}
 .pinkCartBar {
   width: 115px; flex: 0 0 115px; min-height: 65px;
   padding: 8px; background: #E82B65; color: #fff;
@@ -2293,9 +2311,11 @@ function updateFreeDeliveryProgress(cartTotal) {
     if (total >= FREE_DELIVERY_TARGET) {
       title.textContent = 'Free Delivery Unlocked';
       sub.textContent = 'Your order is eligible for free delivery';
+      sub.classList.add('is-marquee');
     } else {
       title.textContent = 'Popular around your area';
       sub.textContent = `Shop for ₹${pending} to unlock free delivery`;
+      sub.classList.remove('is-marquee');
     }
   }
 }
