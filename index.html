@@ -993,140 +993,6 @@ body {
 .deliverySub { margin-top: 3px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.78); line-height: 1.2; }
 body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
 
-
-/* FLOATING DELIVERY + CART — SIDE BY SIDE */
-.mithai-float-row {
-  position: fixed;
-  left: 12px;
-  right: 12px;
-  bottom: calc(84px + env(safe-area-inset-bottom));
-  display: flex;
-  align-items: stretch;
-  gap: 9px;
-  z-index: 99998;
-  pointer-events: none;
-}
-.mithai-float-row .deliveryFloatBar {
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
-  bottom: auto !important;
-  flex: 1 1 0;
-  width: auto !important;
-  min-width: 0;
-  min-height: 65px;
-  padding: 10px 12px;
-  background: #2d3748;
-  border-radius: 22px;
-  box-shadow: none;
-  pointer-events: auto;
-}
-.mithai-float-row .deliveryIcon { margin-right: 10px; }
-.mithai-float-row .deliveryTitle { font-size: clamp(10px, 2.9vw, 13px); }
-.mithai-float-row .deliverySub { font-size: clamp(9px, 2.5vw, 11px); }
-.mithai-cart-float {
-  flex: 0 0 31%;
-  min-width: 0;
-  border: 0;
-  border-radius: 22px;
-  background: #ff0060;
-  color: #fff;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px;
-  cursor: pointer;
-  pointer-events: auto;
-  font-family: Georgia, serif;
-}
-.mithai-cart-float.visible { display: flex; }
-.mithai-cart-float img {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  object-fit: contain;
-  background: #fff;
-  flex-shrink: 0;
-}
-.mithai-cart-float-text { min-width: 0; text-align: left; }
-.mithai-cart-float-title { font-size: clamp(17px, 4.4vw, 25px); line-height: 1; }
-.mithai-cart-float-count { font-size: clamp(11px, 3vw, 17px); margin-top: 4px; white-space: nowrap; }
-@media(max-width:380px) {
-  .mithai-float-row { left: 8px; right: 8px; gap: 6px; }
-  .mithai-float-row .deliveryFloatBar { padding: 9px 8px; }
-  .mithai-float-row .deliveryIcon { margin-right: 8px; }
-  .mithai-cart-float { flex-basis: 33%; gap: 5px; padding: 5px; }
-  .mithai-cart-float img { width: 35px; height: 35px; }
-}
-
-
-/* CONSISTENT FLOATING BAR SIZE + TYPOGRAPHY ON ALL DEVICES */
-.mithai-float-row {
-  left: 10px;
-  right: 10px;
-  gap: 8px;
-  height: 68px;
-  align-items: stretch;
-}
-.mithai-float-row .deliveryFloatBar {
-  height: 68px;
-  min-height: 68px;
-  padding: 9px 11px;
-  border-radius: 20px;
-}
-.mithai-float-row .deliveryIcon {
-  width: 34px;
-  height: 34px;
-  margin-right: 10px;
-}
-.mithai-float-row .deliveryTitle {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-size: 12px;
-  font-weight: 750;
-  line-height: 1.2;
-}
-.mithai-float-row .deliverySub {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-size: 10px;
-  line-height: 1.25;
-  margin-top: 3px;
-}
-.mithai-cart-float {
-  flex: 0 0 120px;
-  width: 120px;
-  height: 68px;
-  border-radius: 20px;
-  padding: 7px;
-  gap: 7px;
-  font-family: Georgia, serif;
-}
-.mithai-cart-float img {
-  width: 39px;
-  height: 39px;
-  border-radius: 11px;
-}
-.mithai-cart-float-title {
-  font-size: 21px;
-  line-height: 1;
-}
-.mithai-cart-float-count {
-  font-size: 13px;
-  line-height: 1.15;
-  margin-top: 4px;
-}
-@media (max-width: 380px) {
-  .mithai-float-row { left: 8px; right: 8px; gap: 6px; }
-  .mithai-float-row .deliveryFloatBar { padding: 8px; }
-  .mithai-float-row .deliveryIcon { margin-right: 7px; }
-  .mithai-float-row .deliveryTitle { font-size: 11px; }
-  .mithai-float-row .deliverySub { font-size: 9px; }
-  .mithai-cart-float { flex-basis: 108px; width: 108px; padding: 5px; gap: 5px; }
-  .mithai-cart-float img { width: 34px; height: 34px; }
-  .mithai-cart-float-title { font-size: 19px; }
-  .mithai-cart-float-count { font-size: 12px; }
-}
-
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
@@ -1780,7 +1646,6 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
 
 
 <!-- FREE DELIVERY FLOAT BAR -->
-<div class="mithai-float-row">
 <div class="deliveryFloatBar" id="mithaiFreeDeliveryBar" aria-live="polite">
   <div class="deliveryIcon">
     <i class="fa-solid fa-person-biking" aria-hidden="true"></i>
@@ -1793,11 +1658,6 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
     <div class="deliveryTitle">Popular around your area</div>
     <div class="deliverySub">Shop for ₹200 to unlock free delivery</div>
   </div>
-</div>
-<button class="mithai-cart-float" id="mithaiCartFloat" type="button" aria-label="View cart">
-  <img id="mithaiCartFloatImage" src="" alt="Cart product">
-  <span class="mithai-cart-float-text"><span class="mithai-cart-float-title">Cart</span><span class="mithai-cart-float-count" id="mithaiCartFloatCount" style="display:block">0 items</span></span>
-</button>
 </div>
 
 <!-- MITHAI BOTTOM NAV -->
@@ -2208,7 +2068,6 @@ number.textContent = qty;
     }
 
     renderButton();
-    updateMithaiFloatingCart();
 
     const cartTotal = [...mithaiCart.values()].reduce(
       (sum, item) => {
@@ -2363,26 +2222,6 @@ loadMithaiProductOne();
 
 
 <script>
-function updateMithaiFloatingCart() {
-  const panel = document.getElementById('mithaiCartFloat');
-  const count = document.getElementById('mithaiCartFloatCount');
-  const image = document.getElementById('mithaiCartFloatImage');
-  if (!panel || !count || !image) return;
-  const items = [...mithaiCart.values()];
-  const qty = items.reduce((sum, item) => sum + item.qty, 0);
-  panel.classList.toggle('visible', qty > 0);
-  count.textContent = `${qty} ${qty === 1 ? 'item' : 'items'}`;
-  if (qty > 0) {
-    const product = items[0].product;
-    const src = product.image1 || product.image || product.image_url || '';
-    if (src) { image.src = src; image.style.display = ''; }
-    else { image.removeAttribute('src'); image.style.display = 'none'; }
-  }
-}
-document.getElementById('mithaiCartFloat')?.addEventListener('click', () => {
-  window.dispatchEvent(new CustomEvent('mithaiOpenCart'));
-  if (typeof window.openMithaiCart === 'function') window.openMithaiCart();
-});
 const FREE_DELIVERY_TARGET = 200;
 function updateFreeDeliveryProgress(cartTotal) {
   const total = Math.max(0, Number(cartTotal) || 0);
