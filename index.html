@@ -1051,8 +1051,6 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
   font-size: clamp(9px, 2.8vw, 13px) !important;
   letter-spacing: clamp(0px, 0.2vw, 1px);
 }
-/* Prevent browser scroll anchoring during ADD / quantity rerenders. */
-.mithai-image-add, .mithai-qty-control, .mithai-add-btn { overflow-anchor: none; }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
@@ -2079,83 +2077,54 @@ function showMithaiShimmer(containerId, count = 4) {
 const mithaiCart = new Map();
 
 function createMithaiAddButton(product) {
-
   const wrapper = document.createElement("div");
   wrapper.className = "mithai-image-add";
-
   const productId = String(product.id);
 
+  // Create controls only ONCE. Replacing focused buttons on every tap
+  // can make iOS WKWebView move the page unexpectedly.
+  const addBtn = document.createElement("button");
+  addBtn.type = "button";
+  addBtn.className = "mithai-add-btn";
+  addBtn.textContent = "ADD";
+
+  const control = document.createElement("div");
+  control.className = "mithai-qty-control";
+  const minus = document.createElement("button");
+  minus.type = "button";
+  minus.textContent = "−";
+  const number = document.createElement("span");
+  number.className = "mithai-number-animate";
+  const plus = document.createElement("button");
+  plus.type = "button";
+  plus.textContent = "+";
+  control.append(minus, number, plus);
+  wrapper.append(addBtn, control);
+
   function renderButton() {
-
     const qty = mithaiCart.get(productId)?.qty || 0;
-
-    wrapper.replaceChildren();
-
-    if (qty === 0) {
-
-      const addBtn = document.createElement("button");
-      addBtn.type = "button";
-      addBtn.className = "mithai-add-btn";
-      addBtn.textContent = "ADD";
-
-      addBtn.onclick = function(event) {
-        event.stopPropagation();
-        changeQuantity(1);
-      };
-
-      wrapper.appendChild(addBtn);
-
-    } else {
-
-      const control = document.createElement("div");
-      control.className = "mithai-qty-control";
-
-      const minus = document.createElement("button");
-      minus.type = "button";
-      minus.textContent = "−";
-
-      minus.onclick = function(event) {
-        event.stopPropagation();
-        changeQuantity(-1);
-      };
-const number = document.createElement("span");
-number.className = "mithai-number-animate";
-number.textContent = qty;
-      const plus = document.createElement("button");
-      plus.type = "button";
-      plus.textContent = "+";
-
-      plus.onclick = function(event) {
-        event.stopPropagation();
-        changeQuantity(1);
-      };
-
-      control.append(minus, number, plus);
-      wrapper.appendChild(control);
-    }
+    addBtn.style.display = qty === 0 ? "flex" : "none";
+    control.style.display = qty === 0 ? "none" : "flex";
+    number.textContent = String(qty);
   }
 
   function changeQuantity(amount) {
-
-    // Preserve the exact viewport when iOS replaces the focused ADD/+/- button.
-    const pageY = window.scrollY;
-    const pageX = window.scrollX;
     const current = mithaiCart.get(productId)?.qty || 0;
-    if (document.activeElement instanceof HTMLElement &&
-        wrapper.contains(document.activeElement)) {
-      document.activeElement.blur();
-    }
     const next = Math.max(0, current + amount);
+    if (next === current) return;
 
     if (next === 0) {
       mithaiCart.delete(productId);
     } else {
-      mithaiCart.set(productId, {
-        product: product,
-        qty: next
-      });
+      mithaiCart.set(productId, { product: product, qty: next });
     }
 
+    // Blur only when changing ADD <-> quantity control.
+    if ((current === 0 || next === 0) &&
+        wrapper.contains(document.activeElement) &&
+        typeof document.activeElement.blur === "function") {
+      document.activeElement.blur();
+    }
     renderButton();
 
     const cartTotal = [...mithaiCart.values()].reduce(
@@ -2190,16 +2159,22 @@ number.textContent = qty;
         detail: { cartTotal }
       })
     );
-
-    // Restore after DOM updates, and once more after WebKit's layout pass.
-    window.scrollTo({ left: pageX, top: pageY, behavior: "instant" });
-    requestAnimationFrame(() => {
-      window.scrollTo({ left: pageX, top: pageY, behavior: "instant" });
-    });
   }
 
-  renderButton();
+  addBtn.addEventListener("click", function(event) {
+    event.stopPropagation();
+    changeQuantity(1);
+  });
+  minus.addEventListener("click", function(event) {
+    event.stopPropagation();
+    changeQuantity(-1);
+  });
+  plus.addEventListener("click", function(event) {
+    event.stopPropagation();
+    changeQuantity(1);
+  });
 
+  renderButton();
   return wrapper;
 }
 
