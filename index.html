@@ -2101,10 +2101,25 @@ function createMithaiAddButton(product) {
   control.append(minus, number, plus);
   wrapper.append(addBtn, control);
 
+  // Prevent iOS WKWebView from scrolling the page to focus a tapped button.
+  // Preventing pointerdown default keeps click handlers working.
+  wrapper.addEventListener("pointerdown", function(event) {
+    if (event.target.closest("button") && event.cancelable) {
+      event.preventDefault();
+    }
+  });
+  wrapper.addEventListener("mousedown", function(event) {
+    if (event.target.closest("button") && event.cancelable) {
+      event.preventDefault();
+    }
+  });
+
   function renderButton() {
     const qty = mithaiCart.get(productId)?.qty || 0;
-    addBtn.style.display = qty === 0 ? "flex" : "none";
-    control.style.display = qty === 0 ? "none" : "flex";
+    addBtn.style.visibility = qty === 0 ? "visible" : "hidden";
+    addBtn.style.pointerEvents = qty === 0 ? "auto" : "none";
+    control.style.visibility = qty === 0 ? "hidden" : "visible";
+    control.style.pointerEvents = qty === 0 ? "none" : "auto";
     number.textContent = String(qty);
   }
 
@@ -2332,8 +2347,16 @@ function fitMithaiDeliveryText() {
 }
 window.addEventListener('resize', fitMithaiDeliveryText, {passive:true});
 if (window.ResizeObserver) {
-  new ResizeObserver(() => requestAnimationFrame(fitMithaiDeliveryText))
-    .observe(document.querySelector('#mithaiFreeDeliveryBar .deliveryText'));
+  const deliveryTextNode = document.querySelector('#mithaiFreeDeliveryBar .deliveryText');
+  if (deliveryTextNode) {
+    let lastDeliveryWidth = -1;
+    new ResizeObserver(entries => {
+      const width = Math.round(entries[0].contentRect.width);
+      if (width === lastDeliveryWidth) return;
+      lastDeliveryWidth = width;
+      requestAnimationFrame(fitMithaiDeliveryText);
+    }).observe(deliveryTextNode);
+  }
 }
 function updateFreeDeliveryProgress(cartTotal) {
   const total = Math.max(0, Number(cartTotal) || 0);
