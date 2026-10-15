@@ -1,0 +1,382 @@
+/* =========================================
+   MITHAI COMPLETE LOGIN CSS
+   Mobile + Name + OTP + Success
+========================================= */
+
+#mithaiLoginOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  display: none;
+  background: #fff;
+  color: #222;
+  font-family: 'Fredoka', sans-serif;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+#mithaiLoginOverlay.is-open {
+  display: block;
+}
+
+#mithaiLoginOverlay,
+#mithaiLoginOverlay * {
+  box-sizing: border-box;
+}
+
+/* =========================================
+   BACK BUTTON — SAME POSITION
+========================================= */
+
+#mithaiLoginOverlay .login-back-btn {
+  position: absolute;
+  top: calc(38px + env(safe-area-inset-top));
+  left: 20px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 100;
+}
+
+#mithaiLoginOverlay .login-back-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: #222;
+  stroke-width: 2.5;
+  fill: none;
+}
+
+/* =========================================
+   MITHAI TOP CENTER BRAND
+========================================= */
+
+#mithaiLoginOverlay .login-brand-heading {
+  position: absolute;
+  top: calc(70px + env(safe-area-inset-top));
+  left: 74px;
+  right: 74px;
+  text-align: center;
+  z-index: 20;
+  pointer-events: none;
+}
+
+#mithaiLoginOverlay .login-brand-title {
+  font-family: 'Fredoka', sans-serif;
+  font-weight: 700;
+  font-size: 39px;
+  letter-spacing: -1.2px;
+  line-height: 1.05;
+  color: #ff59ae;
+}
+
+#mithaiLoginOverlay .login-brand-tagline {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #008535;
+  margin-top: 4px;
+  letter-spacing: 0.1px;
+}
+
+/* =========================================
+   CENTER IMAGE — SAME POSITION
+========================================= */
+
+#mithaiLoginOverlay .login-image-area {
+  position: absolute;
+  top: 210px;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+#mithaiLoginOverlay .login-center-image {
+  display: block;
+  width: 240px;
+  max-width: 80vw;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  flex-shrink: 0;
+  transform: translateY(265px);
+}
+
+/* =========================================
+   BOTTOM LOGIN BOX
+========================================= */
+
+#mithaiLoginOverlay .login-bottom-box {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -6px 35px rgba(0, 0, 0, 0.08);
+  padding: 28px 24px calc(30px + env(safe-area-inset-bottom));
+  z-index: 10;
+}
+
+/* =========================================
+   LOGIN STEPS
+========================================= */
+
+#mithaiLoginOverlay .mithai-login-step {
+  width: 100%;
+  margin: 0;
+}
+
+#mithaiLoginOverlay .login-subtitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: #222;
+  margin: 0 0 20px;
+}
+
+#mithaiLoginOverlay .mithai-step-description {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #777;
+  line-height: 1.6;
+  margin: -8px 0 20px;
+}
+
+/* =========================================
+   INPUT BOX
+========================================= */
+
+#mithaiLoginOverlay .mobile-input-box {
+  display: flex;
+  align-items: center;
+  height: 54px;
+  width: 100%;
+  border: 1.5px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 0 15px;
+}
+
+#mithaiLoginOverlay .mobile-input-box:focus-within {
+  border-color: #ff59ae;
+}
+
+#mithaiLoginOverlay .country-code {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  padding-right: 12px;
+  border-right: 1px solid #ddd;
+}
+
+#mithaiLoginOverlay .mobile-input {
+  flex: 1;
+  min-width: 0;
+  padding-left: 12px;
+  border: 0;
+  outline: 0;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 16px;
+  background: transparent;
+  color: #222;
+}
+
+#mithaiLoginOverlay .mobile-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#mithaiLoginOverlay .mobile-input::placeholder {
+  color: #aaa;
+}
+
+/* =========================================
+   NEW USER NAME INPUT
+========================================= */
+
+#mithaiLoginOverlay #mithaiUserName {
+  padding-left: 0;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* =========================================
+   OTP INPUT
+========================================= */
+
+#mithaiLoginOverlay #mithaiOtpInput {
+  padding-left: 0;
+  width: 100%;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 7px;
+  text-align: center;
+}
+
+#mithaiLoginOverlay #mithaiOtpInput::placeholder {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+/* =========================================
+   DEMO OTP
+========================================= */
+
+#mithaiLoginOverlay .mithai-demo-otp {
+  margin: 16px 0 8px;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888;
+  text-align: center;
+}
+
+#mithaiLoginOverlay .mithai-demo-otp strong {
+  color: #ff59ae;
+  font-weight: 700;
+}
+
+/* =========================================
+   ERROR MESSAGES
+========================================= */
+
+#mithaiLoginOverlay .login-error {
+  font-size: 13px;
+  color: #d32f2f;
+  margin-top: 8px;
+}
+
+#mithaiLoginOverlay .login-error:empty {
+  display: none;
+}
+
+/* =========================================
+   TERMS & PRIVACY
+========================================= */
+
+#mithaiLoginOverlay .login-terms {
+  margin: 18px 0 0;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #888;
+  line-height: 1.6;
+  text-align: center;
+}
+
+#mithaiLoginOverlay .login-terms a {
+  color: #ff59ae;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* =========================================
+   NEXT / CONTINUE / VERIFY BUTTON
+========================================= */
+
+#mithaiLoginOverlay .login-next-btn {
+  width: 100%;
+  height: 54px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 12px;
+  background: #ff59ae;
+  color: #fff;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease;
+}
+
+#mithaiLoginOverlay .login-next-btn:active {
+  transform: scale(0.98);
+}
+
+/* =========================================
+   LOGIN SUCCESS SCREEN
+========================================= */
+
+#mithaiLoginOverlay #mithaiLoginSuccess {
+  text-align: center;
+}
+
+#mithaiLoginOverlay #mithaiLoginSuccess .login-subtitle {
+  font-size: 22px;
+  font-weight: 700;
+  color: #008535;
+  margin-bottom: 12px;
+}
+
+#mithaiLoginOverlay #mithaiLoginSuccess .mithai-step-description {
+  font-size: 16px;
+  margin: 0 0 20px;
+}
+
+#mithaiLoginOverlay #mithaiWelcomeName {
+  color: #ff59ae;
+  font-weight: 700;
+}
+
+/* =========================================
+   BODY SCROLL LOCK
+========================================= */
+
+body.mithai-login-open {
+  overflow: hidden;
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 380px) {
+  #mithaiLoginOverlay .mithai-step-description {
+    font-size: 13px;
+  }
+
+  #mithaiLoginOverlay #mithaiOtpInput {
+    font-size: 21px;
+    letter-spacing: 5px;
+  }
+}
+
+/* =========================================
+   SHORT SCREENS — EXISTING SETTINGS
+========================================= */
+
+@media (max-height: 600px) {
+  #mithaiLoginOverlay .login-image-area {
+    top: 50px;
+  }
+
+  #mithaiLoginOverlay .login-center-image {
+    width: 170px;
+  }
+
+  #mithaiLoginOverlay .login-bottom-box {
+    padding-top: 20px;
+  }
+}
+
+@media (max-height: 720px) {
+  #mithaiLoginOverlay .login-image-area {
+    top: 50px;
+  }
+
+  #mithaiLoginOverlay .login-center-image {
+    width: 170px;
+  }
+}
