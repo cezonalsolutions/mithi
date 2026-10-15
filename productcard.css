@@ -14,7 +14,7 @@
   overflow-x: auto;
   overflow-y: hidden;
 
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 
   /* HIDE SCROLLBAR */
@@ -588,3 +588,6 @@
   padding: 0;
   border: none;
 }
+/* Stable ADD / quantity control; no layout/scroll animation on tap */
+.mithai-image-add { transition: none !important; overflow-anchor: none; }
+.mithai-products-grid { overflow-anchor: none; }
