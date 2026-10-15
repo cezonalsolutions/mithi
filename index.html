@@ -940,7 +940,59 @@ body {
 
 /* MITHAI LOGIN FULL-SCREEN OVERLAY (NO REDIRECT) */
 
+
+/* FLOATING FREE DELIVERY PROGRESS — ABOVE BOTTOM NAV */
+.deliveryFloatBar {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  min-height: 65px;
+  padding: 12px 16px;
+  background: #087f5b;
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  overflow: hidden;
+  z-index: 99998;
+  box-shadow: 0 5px 20px rgba(0,0,0,.12);
+}
+.deliveryIcon {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+.deliveryIcon i { color: #fff; font-size: 15px; }
+.freeProgressRing {
+  position: absolute;
+  inset: -5px;
+  width: 44px;
+  height: 44px;
+  transform: rotate(-90deg);
+}
+.freeProgressRing circle { fill: none; stroke-width: 4; }
+.ringBg { stroke: rgba(255,255,255,.16); }
+.ringFill {
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-dasharray: 94.25;
+  stroke-dashoffset: 94.25;
+  transition: stroke-dashoffset .35s ease;
+}
+.deliveryText { flex: 1; min-width: 0; overflow: hidden; }
+.deliveryTitle { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.15; }
+.deliverySub { margin-top: 3px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.78); line-height: 1.2; }
+body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
+
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
 <link rel="stylesheet" href="login.css">
 
@@ -1547,6 +1599,22 @@ body {
 
 
 
+
+<!-- FREE DELIVERY FLOAT BAR -->
+<div class="deliveryFloatBar" id="mithaiFreeDeliveryBar" aria-live="polite">
+  <div class="deliveryIcon">
+    <i class="fa-solid fa-person-biking" aria-hidden="true"></i>
+    <svg class="freeProgressRing" viewBox="0 0 36 36" aria-hidden="true">
+      <circle class="ringBg" cx="18" cy="18" r="15"></circle>
+      <circle class="ringFill" id="freeDeliveryRing" cx="18" cy="18" r="15"></circle>
+    </svg>
+  </div>
+  <div class="deliveryText">
+    <div class="deliveryTitle">Popular around your area</div>
+    <div class="deliverySub">Shop for ₹200 to unlock free delivery</div>
+  </div>
+</div>
+
 <!-- MITHAI BOTTOM NAV -->
 
 <nav class="mithai-bottom-nav">
@@ -1996,6 +2064,31 @@ showMithaiShimmer("mithaiProductOne");
 loadMithaiProductOne();
 
 
+</script>
+
+
+<script>
+const FREE_DELIVERY_TARGET = 200;
+function updateFreeDeliveryProgress(cartTotal) {
+  const total = Math.max(0, Number(cartTotal) || 0);
+  const pending = Math.max(FREE_DELIVERY_TARGET - total, 0);
+  const ring = document.getElementById('freeDeliveryRing');
+  const title = document.querySelector('#mithaiFreeDeliveryBar .deliveryTitle');
+  const sub = document.querySelector('#mithaiFreeDeliveryBar .deliverySub');
+  const progress = Math.min(total / FREE_DELIVERY_TARGET, 1);
+  if (ring) ring.style.strokeDashoffset = 94.25 * (1 - progress);
+  if (title && sub) {
+    if (total >= FREE_DELIVERY_TARGET) {
+      title.textContent = 'Free Delivery Unlocked';
+      sub.textContent = 'Your order is eligible for free delivery';
+    } else {
+      title.textContent = 'Popular around your area';
+      sub.textContent = `Shop for ₹${pending} to unlock free delivery`;
+    }
+  }
+}
+updateFreeDeliveryProgress(0);
+// Call updateFreeDeliveryProgress(cartTotal) whenever your cart total changes.
 </script>
 
 </body>
