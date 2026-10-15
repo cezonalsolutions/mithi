@@ -380,3 +380,281 @@ body.mithai-login-open {
     width: 170px;
   }
 }
+
+
+
+
+
+
+
+
+.mithai-profile-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 110px;
+  padding: 35px 18px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e5ec;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+.mithai-profile-back {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #dce3ed;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.mithai-profile-back svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: #111820;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mithai-profile-title {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 750;
+  color: #111820;
+}
+
+/* PROFILE DETAILS */
+.mithai-profile-details {
+  margin-top: 110px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f5f6f8;
+  font-family: Arial, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* PROFILE CIRCLE */
+.mithai-profile-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #eadcfb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.mithai-profile-avatar svg {
+  width: 64px;
+  height: 64px;
+  display: block;
+  fill: #913ad2;
+  flex-shrink: 0;
+  transform: translateY(4px);
+}
+
+/* NAME AND PHONE */
+.mithai-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.mithai-profile-name {
+  font-size: 21px;
+  font-weight: 750;
+  color: #111820;
+}
+
+.mithai-profile-phone {
+  font-size: 14px;
+  color: #657084;
+}
+
+/* THREE PROFILE BOXES */
+.mithai-profile-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px 16px 25px;
+  background: #f5f6f8;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* EACH BOX */
+.mithai-profile-action {
+  min-width: 0;
+  height: 115px;
+  background: #ffffff;
+  border: 1px solid #dce3ed;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 10px 5px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+.mithai-profile-action svg {
+  width: 29px;
+  height: 29px;
+  fill: none;
+  stroke: #111820;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.mithai-profile-action span {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111820;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.mithai-profile-action:active {
+  background: #f9f5fc;
+  transform: scale(0.98);
+}
+
+/* YOUR INFORMATION HEADING */
+
+.mithai-profile-quick-actions {
+  padding-bottom: 8px;
+}
+
+.mithai-info-heading {
+  margin: 8px 0 18px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #111820;
+  text-align: left;
+}
+
+
+/* INFORMATION WHITE BOX */
+.mithai-info-box {
+  margin: 0 16px 25px;
+  background: #ffffff;
+  border: 1px solid #e6e8ed;
+  border-radius: 16px;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* INFORMATION ROW */
+.mithai-info-item {
+  width: 100%;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 16px;
+  border: none;
+  border-bottom: 1px solid #edf0f3;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.mithai-info-item:last-child {
+  border-bottom: none;
+}
+
+.mithai-info-icon {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: #222936;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.mithai-info-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111820;
+}
+
+.mithai-info-arrow {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #89919e;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mithai-info-item:active {
+  background: #f7f7f9;
+}
+
+/* MITHAI PROFILE - FULL SCREEN PAGE */
+#mithaiProfilePage {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100dvh;
+  background: #f5f6f8;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  z-index: 2147482000;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-sizing: border-box;
+}
+
+/* SHOW PROFILE ONLY WHEN OPEN */
+#mithaiProfilePage.is-open {
+  display: block;
+}
+
+/* KEEP PROFILE HEADER INSIDE PAGE */
+#mithaiProfilePage .mithai-profile-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* NO EXTRA GAP BELOW HEADER */
+#mithaiProfilePage .mithai-profile-details {
+  margin-top: 0;
+}
+
+/* PREVENT PAGE SCROLL BEHIND PROFILE */
+body.mithai-profile-open {
+  overflow: hidden;
+}
