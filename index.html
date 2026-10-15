@@ -1027,41 +1027,44 @@ body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
 .cartFloatTitle { font-size: 15px; font-weight: 800; }
 .cartFloatCount { font-size: 12px; font-weight: 600; margin-top: 3px; }
 /* Keep existing delivery bar visible when cart is open */
-body.mithai-has-cart .deliveryFloatBar {
-  bottom: calc(160px + env(safe-area-inset-bottom));
-}
-body.mithai-has-cart { padding-bottom: calc(235px + env(safe-area-inset-bottom)); }
-nene antunid 
-/* FREE DELIVERY + CART SIDE BY SIDE */
 
+/* =====================================
+   MITHAI — RESPONSIVE FLOATING BARS
+   SAME DESIGN, MOBILE WIDTH ADJUST
+===================================== */
+
+/* DELIVERY BAR — NO CART */
 .deliveryFloatBar {
   left: 12px !important;
   right: 12px !important;
   bottom: calc(84px + env(safe-area-inset-bottom)) !important;
-  width: auto;
+  width: auto !important;
   transition: width 0.25s ease;
 }
 
+/* CART AVAILABLE — WIDTH BASED ON MOBILE */
+body.mithai-has-cart {
+  --cart-width: 27%;
+  --bar-gap: 10px;
+}
 
-/* GREEN DELIVERY BAR — EXTEND TO CART */
+/* GREEN DELIVERY BAR */
 body.mithai-has-cart .deliveryFloatBar {
   left: 12px !important;
-  right: calc(12px + (100% - 36px) * 0.19 + 10px) !important;
+  right: calc(12px + var(--cart-width) + var(--bar-gap)) !important;
   width: auto !important;
   bottom: calc(84px + env(safe-area-inset-bottom)) !important;
 }
 
-/* PINK CART — SAME SIZE */
+/* PINK CART — RESPONSIVE WIDTH */
 body.mithai-has-cart .cartFloatBox {
   left: auto !important;
   right: 12px !important;
-  width: calc((100% - 36px) * 0.19) !important;
+  width: var(--cart-width) !important;
   bottom: calc(84px + env(safe-area-inset-bottom)) !important;
 }
 
-
-
-/* KEEP EXISTING COLORS */
+/* KEEP EXISTING HEIGHT + COLORS */
 .deliveryFloatBar,
 .cartFloatBox {
   min-height: 65px;
@@ -1070,6 +1073,7 @@ body.mithai-has-cart .cartFloatBox {
 
 /* SMALL MOBILE SCREEN */
 @media (max-width: 480px) {
+
   body.mithai-has-cart .deliveryFloatBar {
     padding: 9px 8px;
     gap: 5px;
@@ -1107,20 +1111,20 @@ body.mithai-has-cart .cartFloatBox {
   }
 }
 
-/* CART ITEMS — SINGLE LINE, SAME SIZE */
+/* CART ITEMS — SINGLE LINE */
 body.mithai-has-cart .cartFloatCount {
   white-space: nowrap !important;
   overflow-wrap: normal !important;
   word-break: normal !important;
 }
 
-/* PREVENT TEXT WRAPPING */
+/* CART TEXT */
 body.mithai-has-cart .cartFloatText {
   white-space: nowrap !important;
   flex-shrink: 0 !important;
 }
 
-/* KEEP CART TITLE SINGLE LINE */
+/* CART TITLE */
 body.mithai-has-cart .cartFloatTitle {
   white-space: nowrap !important;
 }
@@ -1129,6 +1133,7 @@ body.mithai-has-cart .cartFloatTitle {
 body.mithai-has-cart {
   padding-bottom: calc(155px + env(safe-area-inset-bottom)) !important;
 }
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
