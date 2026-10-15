@@ -1023,6 +1023,16 @@ body {
 }
 body { padding-bottom: calc(155px + env(safe-area-inset-bottom)); }
 
+
+
+/* TICKER TEXT: ALWAYS ONE LINE, RESPONSIVE FONT */
+.snack-breaking-text {
+  display: inline-block;
+  flex: 0 0 auto;
+  white-space: nowrap !important;
+  font-size: clamp(9px, 2.8vw, 13px) !important;
+  letter-spacing: clamp(0px, 0.2vw, 1px);
+}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="productcard.css">
