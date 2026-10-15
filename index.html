@@ -2136,6 +2136,10 @@ number.textContent = qty;
   function changeQuantity(amount) {
 
     const current = mithaiCart.get(productId)?.qty || 0;
+     if (document.activeElement instanceof HTMLElement &&
+    wrapper.contains(document.activeElement)) {
+  document.activeElement.blur();
+}
     const next = Math.max(0, current + amount);
 
     if (next === 0) {
